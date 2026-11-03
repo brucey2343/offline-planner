@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>Offline Planner</title>
+<style>
+:root{--ink:#142237;--muted:#5c6a80;--paper:#fff;--line:#dbe2ed;--surface:#f4f7fb;--brand:#2766da;--brand-soft:#eaf2ff;--dark:#11203a;--green:#1b7e67;--warning:#a9680a;--red:#b84045;--radius:13px;--shadow:0 8px 30px rgba(20,34,55,.09)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--surface);color:var(--ink);font:14px/1.48 system-ui,-apple-system,'Segoe UI',Arial,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #7bb2ff;outline-offset:2px}h1,h2,h3,p{margin:0}h1{font-size:1.18rem}h2{font-size:1rem}h3{font-size:.94rem}small,.muted{color:var(--muted)}.app-header{background:var(--dark);color:white;position:sticky;top:0;z-index:25;box-shadow:0 3px 15px #14223719}.header-inner{max-width:1500px;margin:auto;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:11px 16px}.brand{display:flex;align-items:center;gap:9px;font-weight:800;letter-spacing:.1px}.brand-mark{background:#65a5ff;color:#0b284c;border-radius:9px;padding:7px;display:grid;place-items:center}.header-actions{display:flex;gap:7px;flex-wrap:wrap}.pill{border:1px solid #ffffff42;background:#ffffff12;border-radius:8px;color:#fff;padding:8px 11px;font-weight:650}.pill:hover{background:#ffffff26}.pill.primary{background:#8bc4ff;color:#0e2c4d;border-color:#8bc4ff}.nav{display:flex;gap:6px;overflow-x:auto;max-width:1500px;margin:auto;padding:0 16px 9px;scrollbar-width:thin}.tab{background:transparent;border:1px solid transparent;color:#c6d5ed;border-radius:8px;padding:8px 15px;white-space:nowrap;font-weight:700}.tab[aria-selected=true]{background:white;color:var(--dark)}main{max-width:1440px;margin:0 auto;padding:20px 18px 70px}.view-heading{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:16px}.heading-left{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.heading-title{font-size:1.55rem;letter-spacing:-.035em}.date-controls{display:flex;flex-wrap:wrap;gap:7px;align-items:center}.date-controls label{font-weight:700;color:var(--muted);font-size:.84rem}.date-controls input{max-width:166px}.button{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:white;color:var(--ink);border:1px solid #cdd7e7;border-radius:9px;padding:9px 12px;min-height:39px;font-weight:650;white-space:nowrap}.button:hover{background:#edf4ff;border-color:#9cbce9}.button.blue{background:var(--brand);border-color:var(--brand);color:#fff}.button.blue:hover{background:#1c55b9}.button.small{min-height:32px;padding:5px 8px;font-size:.8rem}.button.danger{color:var(--red);border-color:#dfb4b6}.button.icon-only{width:38px;padding:6px}.switcher{display:flex;gap:5px;padding:4px;background:#e5eaf3;border-radius:10px}.switcher button{background:transparent;border:0;border-radius:7px;padding:7px 12px;font-weight:700;color:#55677d}.switcher button[aria-pressed=true]{background:white;color:#174baf;box-shadow:0 1px 5px #19304b1a}.controls-row{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:17px}.notice{background:#fff9e8;border:1px solid #e6ca86;color:#775000;border-radius:9px;padding:11px 13px;margin-bottom:13px}.notice.ok{background:#edf8f4;border-color:#a2cbbc;color:#17634d}.planner-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}.section-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);min-width:0;box-shadow:var(--shadow);overflow:hidden}.section-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 14px;background:#f7f9fd;border-bottom:1px solid var(--line)}.section-head h3{font-weight:790}.section-head .count{color:#526d91;font-size:.76rem;border-radius:20px;background:#e5eefc;padding:2px 8px}.section-actions{display:flex;gap:6px;align-items:center}.section-body{padding:12px 14px}.task-list{display:grid;gap:8px}.task-item{display:flex;gap:9px;align-items:flex-start;padding:9px;border:1px solid var(--line);border-radius:10px;background:white}.task-item.done{background:#f2f5f9}.task-item .task-check{width:20px;height:20px;accent-color:var(--green);flex:none;margin:6px 0 0}.task-content{flex:1;min-width:0}.task-main{display:flex;align-items:flex-start;gap:7px}.task-text{border:1px solid transparent;background:transparent;color:var(--ink);font-weight:550;resize:vertical;width:100%;min-height:29px;line-height:1.4;padding:4px 5px;border-radius:5px;overflow-wrap:anywhere}.task-text:focus{background:white;border-color:#bad0ef}.done .task-text{text-decoration:line-through;color:#6a7889}.task-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:5px}.tiny-select,.tiny-input{background:#f7f9fd;color:#586781;font-size:.78rem;border:1px solid #d9e2ef;border-radius:6px;padding:3px 4px;max-width:130px}.tiny-input[type=date]{max-width:135px}.ghost{border:0;background:transparent;color:#5b6b84;padding:5px;border-radius:7px;min-width:28px}.ghost:hover{background:#e7effb;color:#194b99}.badgetext{font-size:.72rem;padding:2px 7px;border-radius:15px;background:#eef2f8;color:#4b617d}.badgetext.overdue{background:#fde8e5;color:#ad3438}.badgetext.high{background:#fff0df;color:#8c5100}.badgetext.done{background:#e3f6ea;color:#286a4a}.add-row{display:flex;gap:7px;margin-top:11px}.add-row input{min-width:0;flex:1;border:1px solid #ced8e6;border-radius:8px;padding:9px 10px}.empty{color:#718098;font-size:.86rem;padding:10px 2px}.notes-area{min-height:150px;resize:vertical;width:100%;padding:12px;border-radius:9px;border:1px solid #d9e2ef;background:repeating-linear-gradient(to bottom,#fff,#fff 29px,#e3ebf6 30px);line-height:30px;white-space:pre-wrap}.day-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.day-card{border:1px solid var(--line);border-radius:10px;padding:10px;min-width:0}.day-card header{font-weight:800;margin-bottom:7px;display:flex;justify-content:space-between;gap:5px}.day-card header small{font-weight:500}.day-card .task-item{padding:5px;margin-bottom:5px}.day-card .task-meta{display:flex;align-items:center;gap:5px;flex-wrap:wrap}.day-card .task-meta .tiny-select{max-width:155px}.day-card .task-item{align-items:start}.day-card .task-check{width:18px;height:18px}.day-card .task-text{min-height:26px}.day-card .add-row{margin-top:6px}.day-card .add-row input{font-size:.83rem;padding:7px}/* Interactive month-at-a-glance overview: independent of the user's saved A4 box positions. */
+.month-overview{margin-bottom:18px}.month-overview .section-head{flex-wrap:wrap}.month-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;padding:12px}.month-weekday{text-align:center;font-size:.76rem;font-weight:800;color:#526d91;padding:4px 0}.month-day{background:#fff;border:1px solid #dbe2ed;border-radius:8px;min-height:108px;padding:6px;min-width:0;text-align:left;display:flex;flex-direction:column;gap:4px}.month-day.outside{background:#f6f8fb;opacity:.64}.month-day.today{border:2px solid #2766da}.month-day .day-number{border:0;background:transparent;align-self:flex-start;border-radius:6px;padding:3px 5px;min-width:29px;font-weight:800;color:#173b70}.month-day .day-number:hover{background:#eaf2ff}.month-day .cal-task{border:0;display:block;text-align:left;width:100%;background:#edf4ff;border-radius:5px;padding:3px 5px;font-size:.7rem;line-height:1.25;overflow-wrap:anywhere;color:#203e65}.month-day .cal-task.personal{background:#edfaf1;color:#266440}.month-day .cal-task.appt{background:#fff1e5;color:#794715}.month-day .cal-task.done{text-decoration:line-through;opacity:.56}.month-day .cal-task:hover{filter:brightness(.95)}.month-day .cal-more{font-size:.69rem;color:#5b6b84}.month-day .cal-add{border:1px dashed #bfd0e3;border-radius:5px;background:transparent;align-self:flex-end;margin-top:auto;color:#50647e;font-size:.75rem;padding:2px 7px}.month-day .cal-add:hover{background:#eff5ff}.month-legend{padding:0 13px 13px;color:#50647e;font-size:.77rem}.month-legend span{display:inline-block;margin-right:12px}
+@media(max-width:760px){.month-grid{gap:3px;padding:7px}.month-day{min-height:76px;padding:3px;border-radius:5px}.month-day .day-number{padding:3px;font-size:.8rem}.month-day .cal-task{padding:2px 3px;font-size:.62rem}.month-day .cal-add{padding:0 5px;font-size:.69rem}.month-weekday{font-size:.64rem}.month-day .cal-task:nth-of-type(n+3){display:none}}
+.module-label{font-size:.75rem;color:#657992;margin-bottom:3px}.overdue-line{font-size:.75rem;color:#ab5343;margin-top:3px}.dash-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px}.status-bar{font-size:.81rem;color:#526176;margin:9px 0 15px;display:flex;align-items:center;gap:7px}.status-dot{height:8px;width:8px;border-radius:50%;background:#2a9b75}.status-dot.bad{background:#c64c48}.layout-shell{display:grid;grid-template-columns:minmax(0,1fr) 315px;gap:17px;align-items:start}.layout-aside{position:sticky;top:128px;display:grid;gap:13px}.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:15px;box-shadow:var(--shadow)}.panel h3{margin-bottom:9px}.panel p{color:var(--muted);font-size:.85rem;margin-bottom:10px}.field{display:flex;flex-direction:column;gap:5px;margin:9px 0}.field label{font-size:.83rem;font-weight:700}.field input,.field select{border:1px solid #bfcbdc;border-radius:7px;padding:8px;min-width:0;max-width:100%}.field-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.paper-stack{display:grid;gap:19px;justify-content:center}.paper-frame{position:relative;max-width:100%;box-shadow:0 10px 36px #19325224}.paper{width:794px;height:1123px;position:relative;background:white;color:#162238;overflow:hidden;transform-origin:top left;font-family:'Segoe UI',Arial,sans-serif}.paper-shell{position:absolute;left:35px;right:35px;top:29px;bottom:27px;display:flex;flex-direction:column;gap:10px}.paper-heading{height:43px;flex:none;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #172640}.paper-heading strong{font-size:22px;letter-spacing:1.4px;text-transform:uppercase}.paper-heading span{font-size:11px;font-weight:700}.paper-canvas{flex:1;min-height:0;position:relative;border:1px solid transparent}.paper-box{position:absolute;border:1.4px solid #263a59;background:#fff;border-radius:3px;display:flex;flex-direction:column;min-width:0;min-height:0;overflow:hidden}.paper-box.selected{outline:3px solid #267de8;outline-offset:1px}.paper-box .box-label{display:flex;align-items:center;gap:4px;background:#eef2f7;border-bottom:1px solid #354560;padding:4px 6px;font-size:10px;text-transform:uppercase;letter-spacing:.3px;font-weight:750;min-height:22px}.paper-box .box-text{padding:5px 7px;flex:1;min-height:0;overflow:hidden;font-size:11px;line-height:1.35;overflow-wrap:anywhere}.paper-line{display:flex;align-items:flex-start;gap:5px;padding:3px 0;border-bottom:1px solid #e1e7ef;white-space:pre-wrap}.paper-check{display:inline-block;width:10px;height:10px;border:1.1px solid #293b53;flex:none;margin-top:1px}.paper-check.checked{background:#263954;color:white}.paper-check.checked:before{content:'✓';font-size:9px;position:relative;top:-3px;left:1px}.paper-line .line-body{flex:1;min-width:0;white-space:pre-wrap;overflow-wrap:anywhere}.paper-line.done .line-body{text-decoration:line-through;color:#798599}.paper-note{white-space:pre-wrap;overflow-wrap:anywhere;line-height:18px;min-height:1px}.paper-blank{height:15px;border-bottom:1px solid #dce5ef}.paper-dayname{font-weight:750;font-size:9px;margin:5px 0 1px}.paper-flag{color:#ad4f2d;font-size:10px;font-weight:700}.page-number{position:absolute;bottom:11px;right:36px;color:#7c8798;font-size:10px}.paper.dragging .paper-box{touch-action:none}.paper.dragging .paper-box.selected{z-index:5}.handle{display:none;position:absolute;background:#2473e4;border:1px solid white;z-index:6;cursor:nwse-resize;width:23px;height:23px;border-radius:5px;right:0;bottom:0;color:white;font-size:14px;align-items:center;justify-content:center}.paper.designing .paper-box{cursor:move;touch-action:none}.paper.designing .paper-box.selected .handle{display:flex;width:calc(34px / var(--paper-scale,1));height:calc(34px / var(--paper-scale,1));font-size:calc(16px / var(--paper-scale,1))}.paper.designing .paper-box.selected .box-label{background:#dfeeff}.page-label{padding:5px;font-weight:700;color:#58728d;text-align:center}.page-tools{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.module-list{display:grid;gap:6px;max-height:230px;overflow:auto}.module-list button{border:1px solid #e0e6ef;background:#fff;border-radius:8px;padding:7px;text-align:left;display:flex;gap:6px;justify-content:space-between}.module-list button[aria-pressed=true]{border-color:#2970d1;background:#edf5ff}.conflicts-list{display:grid;gap:10px}.conflict-item{border:1px solid #e1bb84;background:#fffcf7;border-radius:9px;padding:12px}.conflict-options{display:grid;gap:8px;margin:8px 0}.conflict-options label{display:flex;align-items:flex-start;gap:8px;padding:7px;border:1px solid #eed7ae;border-radius:7px;overflow-wrap:anywhere}.conflict-options pre{white-space:pre-wrap;max-height:115px;overflow:auto;font-size:.8rem}.toast{position:fixed;bottom:19px;left:50%;transform:translateX(-50%);background:#182b43;color:white;padding:11px 16px;border-radius:9px;z-index:100;opacity:0;pointer-events:none;transition:opacity .2s;max-width:min(94vw,550px);box-shadow:0 6px 22px #0005}.toast.show{opacity:1}.modal-wrap{position:fixed;inset:0;z-index:60;background:#0d1c32ab;display:grid;place-items:center;padding:16px}.modal{width:min(620px,100%);max-height:min(92vh,850px);overflow:auto;background:white;border-radius:15px;box-shadow:0 22px 70px #0b172a5c;padding:20px}.modal header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.modal header h2{font-size:1.15rem}.modal .button{white-space:normal}.modal .footer{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:15px}.settings-grid{display:grid;gap:11px}.settings-grid label{display:flex;align-items:center;gap:8px}.settings-grid input[type=checkbox]{width:18px;height:18px;accent-color:var(--brand)}.settings-grid select{border:1px solid #ccd7e5;border-radius:7px;padding:7px}.backup-info{font-size:.82rem;color:#54657b;line-height:1.5}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.print-root{display:none}.print-controls{display:flex;gap:8px;flex-wrap:wrap}.print-preview .paper-stack{justify-content:center}.footer-hint{color:#6b7a92;font-size:.78rem;margin-top:13px}
+@media(max-width:950px){.layout-shell{grid-template-columns:1fr}.layout-aside{position:static;order:-1;grid-template-columns:repeat(2,minmax(0,1fr))}.planner-grid>.section-card{grid-column:span 6!important}}
+@media(max-width:640px){.header-inner{padding:10px 11px}.brand{font-size:.91rem}.header-actions{gap:5px}.pill{padding:7px 9px;font-size:.81rem}.nav{padding:0 10px 8px}.tab{padding:8px 12px}main{padding:14px 10px 60px}.heading-title{font-size:1.38rem}.view-heading{align-items:flex-start}.date-controls{width:100%}.date-controls input{flex:1;max-width:none;min-width:0}.date-controls .button{padding:7px}.switcher{width:100%;justify-content:stretch}.switcher button{flex:1}.planner-grid{gap:10px}.planner-grid>.section-card{grid-column:span 12!important}.section-body{padding:10px}.section-head{padding:10px}.day-grid{grid-template-columns:1fr}.layout-aside{grid-template-columns:1fr}.controls-row>.button{flex:1}.task-meta{gap:5px}.task-item{padding:7px}.modal{padding:15px}.field-row{grid-template-columns:1fr 1fr}.page-tools .button{flex:1}.print-controls{width:100%}.print-controls .button{flex:1}}
+/* A print preview calendar sheet; every day has a dedicated non-overflowing cell. */
+.print-calendar{height:100%;display:flex;flex-direction:column;gap:10px;padding:4px}.print-calendar h3{text-align:center;font-size:19px}.print-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;flex:1;min-height:0}.print-calendar-weekday{font-size:10px;text-align:center;font-weight:800;background:#eef2f8;padding:5px 1px}.print-calendar-day{border:1px solid #b9c8d9;min-width:0;min-height:0;padding:4px;overflow:hidden;font-size:8px;line-height:1.35}.print-calendar-day.other{background:#f3f5f8;color:#999}.print-calendar-day strong{display:block;font-size:11px;margin-bottom:3px}.print-calendar-entry{overflow-wrap:anywhere;line-height:1.25;margin-bottom:2px}.print-calendar-entry.completed{text-decoration:line-through;color:#778}.print-calendar-day small{font-size:7px}
+@page{size:A4 portrait;margin:0}
+@media print{html,body{width:210mm;background:#fff!important;margin:0!important;padding:0!important}body>*:not(#print-root){display:none!important}#print-root{display:block!important}.paper-stack{display:block!important}.paper-frame{width:210mm!important;height:297mm!important;max-width:none!important;margin:0!important;box-shadow:none!important;page-break-after:always;break-after:page}.paper-frame:last-child{page-break-after:auto;break-after:auto}.paper{transform:none!important;position:relative!important;left:0!important;top:0!important;width:210mm!important;height:297mm!important;overflow:hidden!important}.paper-shell{left:9mm!important;right:9mm!important;top:7.5mm!important;bottom:7.5mm!important}.paper-heading{height:11mm!important}.paper-heading strong{font-size:18pt}.paper-heading span{font-size:9pt}.page-number{bottom:3mm!important;right:9mm!important}.paper-box{break-inside:avoid;page-break-inside:avoid}.paper-box .box-label{font-size:8pt}.paper-box .box-text{font-size:8.5pt}.handle{display:none!important}.print-root{display:block!important}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+
+/* Task status hierarchy: readable at small screen sizes and on paper. */
+.task-item{position:relative;border-left:4px solid #bccbde;transition:background .12s}
+.task-item.task-high{background:#fff;border-left-color:#3e55a4}
+.task-item.task-high:not(.done) .task-text{font-weight:790}
+.task-item.task-low{background:#f5f7fb;border-left-color:#8292a6}
+.task-item.task-overdue{background:#fff1f0;border-left-color:#c42d38;box-shadow:inset 0 0 0 1px #ffd2cf}
+.task-item.task-overdue.task-high{background:#fff1f0;border-left-color:#b72e35}
+.task-item.done{background:#f2f5f9;border-left-color:#b6becb;box-shadow:none;opacity:.80}
+.task-item .task-status{display:flex;gap:5px;flex-wrap:wrap;margin:1px 0 5px}
+.task-item .task-status .badgetext{font-weight:780;letter-spacing:.01em}
+.task-item .task-status .status-overdue{background:#bd343d;color:white}
+.task-item .task-status .status-high{background:#273e75;color:white}
+.task-item .task-status .status-low{background:#dcefee;color:#1d5a62}
+.task-order-controls{display:inline-flex;gap:2px;align-items:center}
+.task-order-controls .ghost{font-size:17px;min-width:34px;min-height:34px;border:1px solid #d3dfed;background:#f8faff}
+.task-order-controls .ghost:disabled{opacity:.32}
+.plan-sort-label{display:inline-flex;align-items:center;gap:7px;font-weight:690;font-size:.85rem}
+.plan-sort-label select,.print-sort-label select{padding:8px 10px;border:1px solid #cbd7e7;border-radius:8px;background:white;color:#203b60;max-width:260px}
+.print-sort-label{display:inline-flex;align-items:center;gap:7px;flex-wrap:wrap;font-weight:680;font-size:.85rem;margin:8px 0}
+.month-day .cal-task.high{font-weight:800;outline:1px solid #778cc1;background:white;color:#1a3568}
+.month-day .cal-task.low{background:#edf6f5;color:#245d62;border-left:2px dotted #39777e}
+.month-day .cal-task.overdue:not(.done){border-left:3px solid #c42d38}
+.paper-line.high{font-weight:800;background:white;border-left:3px double #253d70;padding-left:4px}
+.paper-line.overdue{background:#fff0ee;border-left:3px solid #bd3942;padding-left:4px}
+.paper-line.overdue.high{background:#fff0ee}
+.paper-line .line-flag{font-size:.88em;font-weight:790;margin-right:4px;white-space:nowrap}
+.paper-line .line-flag.overdue{color:#9c2634}
+.paper-line .line-flag.high{color:#263f75}
+.print-calendar-entry.high{font-weight:800;background:white;border-left:2px solid #273f76;padding-left:2px}.print-calendar-entry.low{border-left:2px dotted #39777e;padding-left:2px;color:#245d62}.print-calendar-legend{text-align:center;font-size:9px;font-weight:750;color:#324259}.print-calendar-entry.overdue{border-left:2px solid #c42d38;padding-left:2px}
+.paper-line.done{opacity:.75;background:#f5f5f6;border-left-color:#b4bdc8}
+@media(max-width:640px){.task-order-controls .ghost{min-width:41px;min-height:39px}.plan-sort-label{flex-wrap:wrap}.plan-sort-label select{max-width:min(80vw,270px)}}
+
+/* Nested Daily focus groups, rendered within each existing custom A4 section. */
+.task-group{border:1px solid #d7e1ed;border-radius:10px;background:#f8fafd;overflow:hidden;margin-bottom:9px}
+.task-group:last-child{margin-bottom:0}
+.task-group.is-empty .task-group-header{border-bottom:0;padding-top:6px;padding-bottom:6px}
+.task-group-header{display:flex;align-items:center;justify-content:space-between;gap:6px;font-weight:790;font-size:.83rem;padding:8px 10px;background:#edf2f8;border-bottom:1px solid #d7e1ed}
+.task-group-count{font-size:.74rem;font-weight:650;color:#51617a;border-radius:12px;background:white;padding:1px 7px}
+.task-group-body{padding:8px;display:grid;gap:8px}
+.task-group-body .task-item{margin:0}
+.task-group-overdue{border-left:4px solid #b63743}
+.task-group-overdue .task-group-header{color:#a12e3b;background:#fff2f0}
+.task-group-high{border-left:4px solid #273f76}
+.task-group-high .task-group-header{color:#273f76;background:#eef2fa}
+.task-group-normal{border-left:4px solid #7b8798}
+.task-group-low{border-left:4px solid #39777e}
+.task-group-low .task-group-header{color:#1c5660;background:#edf6f5}
+.task-group-soon{border-left:4px solid #527a95}.task-group-soon .task-group-header{background:#eaf3f8;color:#244d67}
+.task-item.task-soon:not(.task-overdue){border-left-color:#557f9a}
+.task-status .status-soon{background:#e5f2fa;color:#1d526d}
+.task-status .status-energy{background:#ecf5f0;color:#2d6051}
+.batch-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:11px;border:1px solid #bccfe7;border-radius:12px;background:#eaf2fc;margin:10px 0}
+.batch-toolbar select,.batch-toolbar input{min-height:39px;max-width:185px;border:1px solid #c4d3e7;border-radius:7px;padding:6px;background:#fff;color:var(--ink)}
+.batch-selection{width:23px;height:23px;flex:none;accent-color:#285b9e;align-self:flex-start;margin-top:5px}
+.batch-toolbar .batch-count{font-weight:800;color:#1a3e69}
+.import-summary-notice{border-left:4px solid #398574}
+@media(max-width:640px){.batch-toolbar>*{flex:1 1 auto}.batch-toolbar .button{min-height:42px}}
+.paper-group-name.soon{color:#244d67;border-bottom-style:dashed}
+.paper-line.soon:not(.overdue){border-left:3px dashed #557f9a;padding-left:4px}
+.paper-line .line-flag.soon{color:#244d67} 
+.task-group-empty{font-size:.78rem;color:#728096;padding:1px 2px}
+.paper-group-name{font-size:10px;font-weight:850;letter-spacing:.03em;text-transform:uppercase;padding:5px 4px 3px;border-bottom:1.5px solid #30445c;margin-top:3px;break-after:avoid;page-break-after:avoid}
+.paper-group-name.overdue{color:#922c36;border-bottom-color:#922c36}
+.paper-group-name.high{color:#243b74;border-bottom-style:double;border-bottom-width:3px}
+.paper-group-name.low{color:#245c63}
+.paper-line.normal{border-left:3px solid #9aa5b4;padding-left:4px}
+.paper-line.low{border-left:3px dotted #367b82;padding-left:4px}
+.paper-line .line-flag.low{color:#245d62}
+.paper-line .line-flag.normal{color:#48586d}
+@media(max-width:640px){.task-group-header{padding:9px 10px}.task-group-body{padding:6px}}
+
+/* Collapsible, touch-friendly subtasks. Child records are shared across all planning views. */
+.subtask-toggle{border:1px solid #c8d8ef;background:#edf4ff;color:#24538b;border-radius:7px;padding:5px 8px;min-height:30px;font-size:.79rem;font-weight:700;display:inline-flex;align-items:center;gap:6px;white-space:normal}
+.subtask-toggle:hover{background:#dceaff}.subtask-panel{margin-top:10px;padding:9px;border-radius:10px;background:#f6f9fd;border:1px solid #dce5f2;display:grid;gap:7px}
+.subtask-summary{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.subtask-progress{width:70px;height:6px;border-radius:10px;overflow:hidden;background:#d7e2f0;display:inline-block}.subtask-progress span{display:block;height:100%;background:#27937d;transition:width .2s}
+.subtask-row{display:flex;gap:7px;align-items:center;min-width:0}.subtask-check{width:19px;height:19px;flex:none;accent-color:var(--green)}.subtask-text{min-width:0;flex:1;padding:7px 8px;border:1px solid #cfdaea;border-radius:7px;color:var(--ink);background:white}.subtask-row.complete .subtask-text{text-decoration:line-through;color:#78869b}.subtask-controls{display:flex;gap:1px;align-items:center}.subtask-controls .ghost{min-width:29px;padding:5px}
+.subtask-add-form{display:flex;gap:7px;flex-wrap:wrap}.subtask-add-input{flex:1;min-width:100px;padding:8px;border:1px solid #bdcee4;border-radius:8px}.subtask-hint{color:#64758a;font-size:.75rem}
+.paper-line.subtask-print{margin-left:15px;font-size:.93em}.paper-line.subtask-print .paper-check{width:9px;height:9px}
+@media(max-width:640px){.subtask-panel{padding:7px}.subtask-controls .ghost{padding:4px;min-width:28px}.subtask-row{gap:5px}.subtask-add-form .button{flex:none}.subtask-text{padding:8px 5px}}
+
+/* Today's outstanding jobs use the original records, not rollover copies. */
+.auto-carry-hint{display:inline-flex;align-items:center;padding:7px 10px;border:1px solid #b8dccc;border-radius:8px;background:#eaf7f0;color:#145b42;font-size:.82rem;font-weight:650}
+.radar-summary{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;padding:8px 4px;font-size:.91rem}
+.radar-summary strong{color:#a13d26}.radar-summary span{display:block;width:100%;font-size:.77rem;color:#62748b}
+@media(max-width:640px){.auto-carry-hint{font-size:.76rem;width:100%}.radar-summary{font-size:.83rem}}
+</style>
+</head>
+<body>
+<div id="app">
+ <header class="app-header">
+  <div class="header-inner"><div class="brand"><span class="brand-mark">▦</span><span>Offline Planner</span></div><div class="header-actions"><button class="pill" id="backup-btn">↓ Export .txt</button><button class="pill" id="import-btn">↑ Import .txt</button><button class="pill" id="settings-btn">⚙ Settings</button><button class="pill" id="help-btn">? Help</button><button class="pill primary" id="preview-btn">Print / Preview</button></div></div>
+  <nav class="nav" role="tablist" aria-label="Planner views"><button class="tab" data-tab="daily" role="tab">Daily</button><button class="tab" data-tab="backlog" role="tab">Backlog</button><button class="tab" data-tab="weekly" role="tab">Weekly</button><button class="tab" data-tab="monthly" role="tab">Monthly</button><button class="tab" data-tab="anytime" role="tab">Anytime</button></nav>
+ </header>
+ <main>
+  <div class="view-heading"><div class="heading-left"><h1 class="heading-title" id="view-title">Daily planner</h1><div class="date-controls" id="date-controls"></div></div><div class="switcher" aria-label="Editing mode"><button id="mode-plan" aria-pressed="true">Plan</button><button id="mode-layout" aria-pressed="false">Edit layout</button></div></div>
+  <div class="status-bar"><span class="status-dot" id="status-dot"></span><span id="status-text">Offline · Checking local storage…</span></div>
+  <div id="notifications"></div>
+  <div id="mode-content"></div>
+  <div class="footer-hint">Your planner stays on this device. Export a .txt file to move or merge your tasks, notes and layouts between devices.</div>
+ </main>
+</div>
+<input id="file-import" type="file" accept=".txt,.json,.backup,application/json,text/plain" hidden>
+<div id="modal-layer"></div><div id="toast" class="toast" role="status" aria-live="polite"></div><div id="print-root" class="print-root" aria-hidden="true"></div>
+<script>
+'use strict';
+/* Offline Planner: standalone, dependency-free, portable. */
+const storage=(()=>{try{return window.localStorage}catch(e){return {getItem:()=>null,setItem:()=>{throw e},removeItem:()=>{throw e}}}})();
+const APP_VERSION=1, KEY='WORK_LIFE_OFFLINE_PLANNER_V1', LEGACY_KEY='MODULAR_A4_PLANNER_STATE_V4';
+const VIEW_NAMES={daily:'Daily',backlog:'Backlog',weekly:'Weekly',monthly:'Monthly',anytime:'Anytime'};
+const TOTAL_COLS=12,TOTAL_ROWS=24;
+const now=()=>new Date().toISOString();
+const randomId=()=>globalThis.crypto?.randomUUID?.() || ('r'+Date.now().toString(36)+Math.random().toString(36).slice(2));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const isoDate=(date=new Date())=>{const d=new Date(date.getTime()-date.getTimezoneOffset()*60000);return d.toISOString().slice(0,10)};
+function parseDate(s){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||'');if(!m)return null;const d=new Date(+m[1],+m[2]-1,+m[3]);return d.getFullYear()===+m[1]&&d.getMonth()===+m[2]-1&&d.getDate()===+m[3]?d:null}
+function addDays(date,n){const d=parseDate(date);if(!d)return date;d.setDate(d.getDate()+n);return isoDate(d)}
+function monday(date){const d=parseDate(date)||new Date();d.setDate(d.getDate()-((d.getDay()+6)%7));return isoDate(d)}
+const monthOf=d=>(d||isoDate()).slice(0,7);
+const readableDate=(date,options={weekday:'short',day:'numeric',month:'short'})=>parseDate(date)?.toLocaleDateString('en-GB',options)||date;
+const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
+const deepClone=o=>JSON.parse(JSON.stringify(o));
+const uid=(prefix='t')=>prefix+'-'+randomId();
+const typeNames={tasks:'Task list',notes:'Notes / scratchpad',radar:'Monthly deadline feed',weekdays:'Seven-day schedule'};
+const TASK_CATEGORIES=[['Work','daily-work'],['Personal','daily-personal'],['Appt','daily-appts'],['Waiting','daily-waiting'],['Non-negotiable','daily-nonneg']];
+function dailySectionFor(task){const explicit=g(task,'dailySection','');if(explicit&&g(moduleById(explicit),'view')==='daily'&&g(moduleById(explicit),'type')==='tasks')return explicit;const original=g(task,'section','');if(original.startsWith('daily-')&&g(moduleById(original),'view')==='daily'&&g(moduleById(original),'type')==='tasks')return original;return TASK_CATEGORIES.find(pair=>pair[0]===g(task,'category','Work'))?.[1]||'daily-work'}
+function categoryForDailySection(section){if(section==='daily-personal-extra')return 'Personal';return TASK_CATEGORIES.find(pair=>pair[1]===section)?.[0]||'Work'}
+
+const DEFAULT_MODULES={
+ daily:[
+  ['daily-radar','Outstanding tasks overview','radar',0,0,12,3,1],
+  ['daily-nonneg','Non-negotiables','tasks',0,3,12,3,1],
+  ['daily-work','Work','tasks',0,6,8,12,1],
+  ['daily-waiting','Waiting on / chasing','tasks',0,18,8,6,1],
+  ['daily-appts','Appointments','tasks',8,6,4,5,1],
+  ['daily-personal','Personal','tasks',8,11,4,6,1],
+  ['daily-scratch','Scratchpad','notes',8,17,4,7,1],
+  ['daily-work-notes','Extended work notes & calculations','notes',0,0,8,24,2],
+  ['daily-personal-extra','Personal (continued)','tasks',8,0,4,9,2],
+  ['daily-scratch-extra','Extended scratchpad','notes',8,9,4,15,2]
+ ],
+ backlog:[
+  ['backlog-work','Work','tasks',0,0,6,12,1],['backlog-home','Home','tasks',6,0,6,12,1],
+  ['backlog-tech','Tech','tasks',0,12,6,12,1],['backlog-someday','Low-energy / someday','tasks',6,12,6,12,1],
+  ['backlog-work-extra','Work (continued)','tasks',0,0,6,12,2],['backlog-home-extra','Home (continued)','tasks',6,0,6,12,2],
+  ['backlog-tech-extra','Tech (continued)','tasks',0,12,6,12,2],['backlog-someday-extra','Low-energy / someday (continued)','tasks',6,12,6,12,2]
+ ],
+ weekly:[
+  ['weekly-radar','Outstanding tasks overview','radar',0,0,12,4,1],
+  ['weekly-days','Monday – Sunday','weekdays',0,4,8,20,1],
+  ['weekly-priorities',"This week's priorities",'tasks',8,4,4,10,1],
+  ['weekly-scratch','Scratchpad','notes',8,14,4,10,1],
+  ['weekly-notes-extra','Extended weekly tasks & notes','notes',0,0,8,24,2],['weekly-scratch-extra','Extended scratchpad','notes',8,0,4,24,2]
+ ],
+ monthly:[
+  ['monthly-radar','Dated deadlines, events & radar','tasks',0,0,12,10,1],
+  ['monthly-work-focus','Monthly work focus','notes',0,10,6,14,1],
+  ['monthly-personal-focus','Monthly personal & home focus','notes',6,10,6,14,1],
+  ['monthly-radar-extra','Additional dated radar items','tasks',0,0,12,10,2],
+  ['monthly-scratch-extra','Extended monthly planning & scratchpad','notes',0,10,12,14,2]
+ ],
+ anytime:[
+  ['anytime-list','Tasks without due dates','tasks',0,0,12,18,1],
+  ['anytime-notes','Anytime notes','notes',0,18,12,6,1]
+ ]};
+const PAGE_ACTIVE_DEFAULT={daily:[1],backlog:[1],weekly:[1],monthly:[1],anytime:[1]};
+const collapsedSubtasks=new Set(),openEmptySubtasks=new Set();
+let store,deviceId,seq=0,active='daily',mode='plan',focusDates={daily:isoDate(),weekly:monday(isoDate()),monthly:monthOf(isoDate())},selectedModule=null,batchMode=false,batchSelected=new Map(),lastImportSummary=null,drawPending=false,storageOkay=true,storageError='',storageRecoveryRequired=false,damagedRaw=null,conflicts=[],unresolvedCount=0;
+function newStore(){return {format:'work-life-planner',schema:1,createdAt:now(),records:{},prefs:{showRules:true,showDone:true,showOverdue:true,showCalendar:true,sortMode:'focus',printSortMode:'focus',overdueOnly:false,pages:deepClone(PAGE_ACTIVE_DEFAULT),active:'daily'},exportedAt:null}}
+function blankRevision(value){return {value,rev:uid('baseline'),anc:[]}}
+function ensureSharedSettings(){const id='shared-settings',defaults={showRules:true,showDone:true,showOverdue:true,showCalendar:true};if(!store.records[id]){const record={id,kind:'settings',fields:{}};for(const [key,def] of Object.entries(defaults)){const value=store.prefs[key]??def,base=`default-v1:${id}:${key}`;record.fields[key]=value===def?{value,rev:base,anc:[]}:{value,rev:`${deviceId}:${++seq}:${Date.now()}`,anc:[base]}}store.records[id]=record}syncSharedPrefs()}
+function syncSharedPrefs(){const rec=store.records['shared-settings'];if(!rec)return;for(const k of ['showRules','showDone','showOverdue','showCalendar'])store.prefs[k]=g(rec,k,store.prefs[k])}
+function setPreference(key,value){setField(store.records['shared-settings'],key,value);store.prefs[key]=value;scheduleSave()}
+function ensureDefaultModules(){for(const view of Object.keys(DEFAULT_MODULES)){for(const spec of DEFAULT_MODULES[view]){const [id,title,type,x,y,w,h,page]=spec;if(!store.records[id]){const obj={id,kind:'module',fields:{}};for(const [key,val] of Object.entries({view,title,type,x,y,w,h,page,hidden:false}))obj.fields[key]={value:val,rev:`default-v1:${id}:${key}`,anc:[]};store.records[id]=obj;}}}}
+function g(record,field,fallback=''){return record?.fields?.[field]?.value??fallback}
+function setField(record,key,value){if(!record)return false;const old=record.fields[key];if(old&&JSON.stringify(old.value)===JSON.stringify(value))return false;const rev=`${deviceId}:${++seq}:${Date.now()}`;record.fields[key]={value,rev,anc:old?[...new Set([old.rev,...(old.anc||[]).slice(0,239),...(old.anc?.length?[old.anc[old.anc.length-1]]:[])])].slice(0,241):[]};scheduleSave();return true}
+function createRecord(kind,data,id=uid(kind[0])){const record={id,kind,fields:{}};for(const [key,val] of Object.entries(data))record.fields[key]={value:val,rev:`${deviceId}:${++seq}:${Date.now()}`,anc:[]};store.records[id]=record;scheduleSave();return record}
+function items(kind){return Object.values(store.records).filter(x=>x.kind===kind&&!g(x,'deleted',false))}
+function modulesFor(view,page=null){return items('module').filter(m=>g(m,'view')===view&&!g(m,'hidden',false)&&(page===null||g(m,'page')===page)).sort((a,b)=>g(a,'page')-g(b,'page')||g(a,'y')-g(b,'y')||g(a,'x')-g(b,'x'))}
+function scopeFor(view,moduleId){if(moduleId==='weekly-days')return focusDates.weekly;return view==='daily'?focusDates.daily:view==='weekly'?focusDates.weekly:view==='monthly'?focusDates.monthly:'all'}
+function moduleById(id){return store.records[id]}
+function tasksFor(section,scope){return items('task').filter(t=>g(t,'section')===section&&g(t,'scope')===scope).sort((a,b)=>g(a,'order',0)-g(b,'order',0)||g(a,'created','').localeCompare(g(b,'created','')))}
+/* Compatibility repair for copies made by the old Carry Forward button.
+   Each copy carries a precise link to its source; NEVER dedupe on task text. */
+function carrySourceId(task){const source=g(task,'carryFrom','');const match=/^(.+):\d{4}-\d{2}-\d{2}:\d{4}-\d{2}-\d{2}$/.exec(source);return match?.[1]||''}
+function carryRootId(task){let id=task.id;const seen=new Set();while(!seen.has(id)){seen.add(id);const parent=store.records[id];if(!parent||parent.kind!=='task')break;const source=carrySourceId(parent);if(!source||!store.records[source]||store.records[source].kind!=='task')break;id=source}return id}
+function consolidateOldCarriedTasks(){
+ const groups=new Map();
+ for(const task of Object.values(store.records)){
+   if(task.kind!=='task'||g(task,'supersededBy',''))continue;
+   const root=carryRootId(task),arr=groups.get(root)||[];arr.push(task);groups.set(root,arr)
+ }
+ let consolidated=0;
+ for(const [rootId,group] of groups){
+   if(group.length<2||!group.some(carrySourceId))continue;
+   const first=store.records[rootId];if(!first)continue;
+   const live=group.filter(t=>!g(t,'deleted',false));
+   if(!live.length)continue;
+   const root=!g(first,'deleted',false)?first:live[0];
+   const descendants=live.filter(t=>t.id!==root.id);
+   if(!descendants.length){if(taskDate(first)&&taskDate(root)!==taskDate(first))setField(root,'due',taskDate(first));continue;}
+   // The most recently scheduled copy carries the latest unchecked checklist state.
+   descendants.sort((a,b)=>{
+     const aKey=(g(a,'carryFrom','').split(':').at(-1)||taskDate(a))+'|'+g(a,'created','');
+     const bKey=(g(b,'carryFrom','').split(':').at(-1)||taskDate(b))+'|'+g(b,'created','');
+     return aKey.localeCompare(bKey)
+   });
+   const latest=descendants[descendants.length-1];
+   const originalDate=taskDate(first); // ALWAYS retain the original due date, not a rollover destination.
+   for(const field of ['text','done','priority','category','dailySection']){
+     if(latest.fields[field])setField(root,field,g(latest,field));
+   }
+   if(originalDate&&g(root,'due','')!==originalDate)setField(root,'due',originalDate);
+   const originals=subtasksFor(root);
+   // Old copies contained only unfinished steps. Incorporate *every* later copy,
+   // not just the last one, so an intermediate day's completed steps are not lost.
+   for(const copy of descendants){
+     const used=new Set();
+     for(const step of subtasksFor(copy)){
+       const key=g(step,'text','').trim().toLocaleLowerCase();
+       const prior=originals.find(x=>!used.has(x.id)&&g(x,'text','').trim().toLocaleLowerCase()===key);
+       if(prior){used.add(prior.id);if(g(step,'done',false))setField(prior,'done',true)}
+       else {setField(step,'parentId',root.id);originals.push(step);used.add(step.id)}
+     }
+   }
+   for(const copy of descendants){setField(copy,'deleted',true);setField(copy,'supersededBy',root.id);consolidated++}
+ }
+ return consolidated;
+}
+
+function noteId(moduleId,scope){return 'note:'+moduleId+':'+scope}
+function getNote(moduleId,scope){return g(store.records[noteId(moduleId,scope)],'text','')}
+function saveNote(moduleId,scope,text){const id=noteId(moduleId,scope);let n=store.records[id];if(!n)n=createRecord('note',{module:moduleId,scope,text},id);else setField(n,'text',text)}
+function newTask(section,scope,text='',extra={}){const order=Date.now();return createRecord('task',{section,scope,text,done:false,priority:'normal',energy:'standard',due:'',category:'Work',recurrence:'none',startDate:scope?.length===10?scope:'',created:now(),updated:now(),order,deleted:false,...extra})}
+// Each subtask is a separate revision-tracked record linked by a stable parent task ID.
+// For repeating parent tasks, completion is stored separately for each occurrence date.
+function subtasksFor(task){return items('subtask').filter(child=>g(child,'parentId')===task.id).sort((a,b)=>g(a,'order',0)-g(b,'order',0)||g(a,'created','').localeCompare(g(b,'created',''))||a.id.localeCompare(b.id))}
+function subtaskOccurrenceId(step,date){return 'subocc:'+step.id+':'+date}
+function subtaskDone(step,parent,date=null){if(date&&g(parent,'recurrence','none')!=='none')return g(store.records[subtaskOccurrenceId(step,date)],'done',false);return g(step,'done',false)}
+function setSubtaskDone(step,parent,date,value){if(date&&g(parent,'recurrence','none')!=='none'){const id=subtaskOccurrenceId(step,date);let rec=store.records[id];if(!rec)rec=createRecord('suboccurrence',{subtask:step.id,date,done:value},id);else setField(rec,'done',value)}else setField(step,'done',value)}
+function subtaskProgress(task,date=null){const steps=subtasksFor(task);return {steps,total:steps.length,completed:steps.filter(x=>subtaskDone(x,task,date)).length}}
+function addSubtask(parent,text){const steps=subtasksFor(parent);const order=steps.length?Math.max(...steps.map(s=>+g(s,'order',0)))+1:1;return createRecord('subtask',{parentId:parent.id,text,done:false,order,deleted:false,created:now()})}
+function moveSubtask(parent,step,delta){const steps=subtasksFor(parent),index=steps.findIndex(x=>x.id===step.id),target=index+delta;if(index<0||target<0||target>=steps.length)return;const other=steps[target],position=g(step,'order',index),otherPosition=g(other,'order',target);if(position===otherPosition){steps.forEach((item,i)=>setField(item,'order',i+1));}else{setField(step,'order',otherPosition);setField(other,'order',position)}render()}
+function subtaskUiKey(parent,date){return parent.id+'|'+(g(parent,'recurrence','none')==='none'?'':(date||''))}
+function focusSubtaskEntry(parent,date){const input=Array.from(document.querySelectorAll('.subtask-add-input')).find(x=>x.dataset.parent===parent.id&&x.dataset.day===(date||''));input?.focus()}
+function renderSubtasks(body,parent,date){const {steps,total,completed}=subtaskProgress(parent,date),key=subtaskUiKey(parent,date),expanded=total?!collapsedSubtasks.has(key):openEmptySubtasks.has(key);
+ const summary=document.createElement('div');summary.className='subtask-summary';const toggle=document.createElement('button');toggle.className='subtask-toggle';toggle.type='button';toggle.setAttribute('aria-expanded',String(expanded));toggle.textContent=(expanded?'▾ ':'▸ ')+(total?`Steps ${completed}/${total}`:'＋ Add subtasks');toggle.title=expanded?'Collapse subtasks':'Expand and manage subtasks';toggle.setAttribute('aria-label',expanded?'Collapse subtasks':'Expand and manage subtasks');toggle.onclick=()=>{if(expanded){if(total)collapsedSubtasks.add(key);else openEmptySubtasks.delete(key)}else{if(total)collapsedSubtasks.delete(key);else openEmptySubtasks.add(key)};render();if(!expanded&&total===0)focusSubtaskEntry(parent,date)};summary.append(toggle);
+ if(total){const progress=document.createElement('div');progress.className='subtask-progress';progress.setAttribute('role','progressbar');progress.setAttribute('aria-label','Subtask progress');progress.setAttribute('aria-valuemin','0');progress.setAttribute('aria-valuemax',String(total));progress.setAttribute('aria-valuenow',String(completed));const fill=document.createElement('span');fill.style.width=(completed/total*100)+'%';progress.append(fill);summary.append(progress)}body.append(summary);
+ if(!expanded)return;
+ const panel=document.createElement('div');panel.className='subtask-panel';panel.dataset.parent=parent.id;
+ for(const [index,step] of steps.entries()){const done=subtaskDone(step,parent,date),line=document.createElement('div');line.className='subtask-row'+(done?' complete':'');
+  const check=document.createElement('input');check.className='subtask-check';check.type='checkbox';check.checked=done;check.setAttribute('aria-label','Complete subtask '+g(step,'text'));check.onchange=()=>{setSubtaskDone(step,parent,date,check.checked);render()};
+  const input=document.createElement('input');input.className='subtask-text';input.type='text';input.value=g(step,'text');input.maxLength=2000;input.setAttribute('aria-label','Subtask description');input.oninput=()=>setField(step,'text',input.value);
+  const controls=document.createElement('div');controls.className='subtask-controls';
+  const up=document.createElement('button');up.className='ghost';up.type='button';up.textContent='↑';up.title='Move subtask up';up.setAttribute('aria-label','Move subtask up');up.disabled=index===0;up.onclick=()=>moveSubtask(parent,step,-1);
+  const down=document.createElement('button');down.className='ghost';down.type='button';down.textContent='↓';down.title='Move subtask down';down.setAttribute('aria-label','Move subtask down');down.disabled=index===steps.length-1;down.onclick=()=>moveSubtask(parent,step,1);
+  const remove=document.createElement('button');remove.className='ghost';remove.type='button';remove.textContent='✕';remove.title='Remove subtask';remove.setAttribute('aria-label','Remove subtask');remove.onclick=()=>confirmAction('Remove subtask?',`Remove “${g(step,'text').slice(0,100)}”? The rest of the parent task will be preserved.`,()=>{setField(step,'deleted',true);render();showToast('Subtask removed')},'Remove');
+  controls.append(up,down,remove);line.append(check,input,controls);panel.append(line)
+ }
+ const form=document.createElement('form');form.className='subtask-add-form';const text=document.createElement('input');text.className='subtask-add-input';text.type='text';text.placeholder='Next small step…';text.maxLength=2000;text.dataset.parent=parent.id;text.dataset.day=date||'';text.setAttribute('aria-label','New subtask');const add=document.createElement('button');add.type='submit';add.className='button small blue';add.textContent='＋ Add step';form.append(text,add);form.onsubmit=e=>{e.preventDefault();const value=text.value.trim();if(!value)return;addSubtask(parent,value);render();focusSubtaskEntry(parent,date)};panel.append(form);
+ const hint=document.createElement('div');hint.className='subtask-hint';hint.textContent=total?'Parent completion is separate from the steps.':'Subtasks stay with this task when it moves between dates or sections.';panel.append(hint);body.append(panel);
+}
+
+function showToast(message){const el=document.getElementById('toast');el.textContent=message;el.classList.add('show');clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>el.classList.remove('show'),3300)}
+function scheduleSave(){clearTimeout(scheduleSave.timer);scheduleSave.timer=setTimeout(persist,250)}
+function persist(){if(storageRecoveryRequired){storageOkay=false;updateStatus();return false}try{const encoded=JSON.stringify(store);storage.setItem(KEY,encoded);if(storage.getItem(KEY)!==encoded)throw Error('Browser did not retain the saved state');storageOkay=true;storageError='';}catch(e){storageOkay=false;storageError=String(e);showToast('Browser storage failed. Export your data now.')}updateStatus()}
+function preserveDamagedDataForRestore(){
+ if(!storageRecoveryRequired)return true;
+ try{
+   const key=KEY+'_RECOVERY_'+Date.now()+'_'+randomId().slice(0,8);
+   storage.setItem(key,damagedRaw);
+   if(storage.getItem(key)!==damagedRaw)throw Error('Recovery copy could not be verified');
+   storageRecoveryRequired=false;storageError='';return true;
+ }catch(e){
+   storageOkay=false;storageError='Unable to preserve damaged data: '+e;
+   updateStatus();showToast('Recovery copy failed. Download the original data before leaving.');
+   return false;
+ }
+}
+function updateStatus(){document.getElementById('status-dot').classList.toggle('bad',!storageOkay);document.getElementById('status-text').textContent=storageRecoveryRequired?'Saved data could not be read · Original data preserved · Local saving paused':storageOkay?'Offline · Changes saved on this device · Transfer with Export .txt':'Local saving unavailable · Export a transfer file before closing';const notifications=document.getElementById('notifications');notifications.innerHTML='';if(storageRecoveryRequired){
+ const el=document.createElement('div');el.className='notice';
+ el.append(document.createTextNode('Your saved planner data could not be read. The original data has NOT been overwritten. Saving is paused. Download the original for recovery, then import a backup or use Settings to deliberately reset. '));
+ const btn=document.createElement('button');btn.className='button small';btn.textContent='Download original data';
+ btn.onclick=()=>downloadText(damagedRaw,'offline_planner_recovery_'+isoDate()+'.txt');
+ el.append(btn);notifications.append(el);
+}else if(!storageOkay){const el=document.createElement('div');el.className='notice';el.textContent='Warning: this browser is not saving your data reliably. Use Export .txt before leaving this page.';notifications.append(el)}if(unresolvedCount){const b=document.createElement('div');b.className='notice';b.innerHTML=`${unresolvedCount} imported field conflict(s) require review. <button class="button small" id="review-conflicts">Review conflicts</button>`;notifications.append(b);b.querySelector('button').onclick=reviewConflicts}
+if(lastImportSummary){const b=document.createElement('div');b.className='notice import-summary-notice';const count=v=>Object.values(v||{}).reduce((a,n)=>a+Number(n||0),0);b.innerHTML=`Last import: <b>${count(lastImportSummary.added)} added, ${count(lastImportSummary.updated)} updated, ${lastImportSummary.conflictRecords} conflicts</b> · <button class="button small" id="import-details">View details</button>`;notifications.append(b);b.querySelector('button').onclick=showImportReport}}
+function load(){storageRecoveryRequired=false;damagedRaw=null;storageOkay=true;storageError='';let raw=null;deviceId=storage.getItem(KEY+'_DEVICE')||uid('device');try{storage.setItem(KEY+'_DEVICE',deviceId)}catch(e){storageOkay=false}
+ try{raw=storage.getItem(KEY);if(raw!==null){const obj=JSON.parse(raw);if(obj.format==='work-life-planner'&&obj.schema===1&&obj.records&&obj.prefs)store=obj;else throw new Error('Unrecognised format')}else store=newStore()}catch(e){store=newStore();storageRecoveryRequired=raw!==null;damagedRaw=raw;storageOkay=false;storageError=String(e)}
+ conflicts=Array.isArray(store.pendingConflicts)?store.pendingConflicts:[];unresolvedCount=conflicts.length;store.prefs={...newStore().prefs,...store.prefs};store.prefs.pages={...deepClone(PAGE_ACTIVE_DEFAULT),...(store.prefs.pages||{})};lastImportSummary=store.prefs.lastImportSummary||null;active=store.prefs.active||'daily';if(!VIEW_NAMES[active])active='daily';ensureDefaultModules();ensureSharedSettings();const repaired=consolidateOldCarriedTasks();persist();if(repaired)console.info(`Consolidated ${repaired} legacy carry-forward copies into their original jobs`);}
+function modal(title,html,buttons=[]){const root=document.getElementById('modal-layer');root.innerHTML=`<div class="modal-wrap"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><header><h2 id="dialog-title">${esc(title)}</h2><button class="button small" id="dialog-close" aria-label="Close dialog">✕</button></header><div id="dialog-body">${html}</div><div class="footer" id="dialog-footer"></div></div></div>`;const close=()=>{root.innerHTML=''};root.querySelector('#dialog-close').onclick=close;root.querySelector('.modal-wrap').addEventListener('click',e=>{if(e.target.classList.contains('modal-wrap'))close()});const foot=root.querySelector('#dialog-footer');buttons.forEach(b=>{const btn=document.createElement('button');btn.className='button '+(b.css||'');btn.textContent=b.label;btn.onclick=()=>b.run(close);foot.append(btn)});return {root,close,body:root.querySelector('#dialog-body')}}
+function confirmAction(title,message,onYes,yes='Continue'){modal(title,`<p>${esc(message)}</p>`,[{label:'Cancel',run:close=>close()},{label:yes,css:'blue',run:close=>{close();onYes()}}])}
+function setTab(view){if(!VIEW_NAMES[view])return;batchSelected.clear();batchMode=false;active=view;store.prefs.active=view;selectedModule=null;scheduleSave();render()}
+function setMode(next){mode=next;selectedModule=null;render()}
+function navDate(delta){if(active==='daily')focusDates.daily=addDays(focusDates.daily,delta);if(active==='weekly')focusDates.weekly=addDays(focusDates.weekly,delta*7);if(active==='monthly'){const [y,m]=focusDates.monthly.split('-').map(Number);const d=new Date(y,m-1+delta,1);focusDates.monthly=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`}render()}
+function gotoToday(){if(active==='daily')focusDates.daily=isoDate();if(active==='weekly')focusDates.weekly=monday(isoDate());if(active==='monthly')focusDates.monthly=monthOf(isoDate());render()}
+function render(){document.querySelectorAll('[data-tab]').forEach(b=>{const is=b.dataset.tab===active;b.setAttribute('aria-selected',is);b.tabIndex=is?0:-1});document.getElementById('view-title').textContent=VIEW_NAMES[active]+' planner';document.getElementById('mode-plan').setAttribute('aria-pressed',mode==='plan');document.getElementById('mode-layout').setAttribute('aria-pressed',mode==='layout');const date=document.getElementById('date-controls');date.innerHTML=['backlog','anytime'].includes(active)?'':`<button class="button icon-only" id="date-prev" aria-label="Previous">‹</button><label for="date-input">${active==='weekly'?'Week commencing':active==='monthly'?'Month':'Date'}</label><input class="tiny-input" style="font-size:.9rem;padding:8px;border-radius:8px" type="${active==='monthly'?'month':'date'}" id="date-input" value="${focusDates[active]}"><button class="button icon-only" id="date-next" aria-label="Next">›</button><button class="button small" id="date-today">Today</button>`;if(!['backlog','anytime'].includes(active)){date.querySelector('#date-prev').onclick=()=>navDate(-1);date.querySelector('#date-next').onclick=()=>navDate(1);date.querySelector('#date-today').onclick=gotoToday;date.querySelector('#date-input').onchange=e=>{let v=e.target.value;if(active==='weekly')v=monday(v);if(active==='monthly'){if(/^\d{4}-\d{2}$/.test(v))focusDates.monthly=v}else if(parseDate(v))focusDates[active]=v;render()}};
+ const content=document.getElementById('mode-content');content.innerHTML='';if(mode==='plan')renderPlan(content);else renderDesigner(content);updateStatus();}
+function recurrenceMatches(task,date){const r=g(task,'recurrence','none');if(r==='none')return false;const start=g(task,'startDate','')||g(task,'due','');if(start&&start>date)return false;const d=parseDate(date);const s=parseDate(start);if(!d||!s)return false;if(r==='daily')return true;if(r==='weekdays')return d.getDay()>=1&&d.getDay()<=5;if(r==='weekly')return d.getDay()===s.getDay();if(r==='monthly')return d.getDate()===Math.min(s.getDate(),new Date(d.getFullYear(),d.getMonth()+1,0).getDate());return false}
+function occurrenceId(task,date){return 'occ:'+task.id+':'+date}
+function doneFor(task,date=null){if(date&&g(task,'recurrence')!=='none')return g(store.records[occurrenceId(task,date)],'done',false);return g(task,'done',false)}
+// A recurring job is one actionable job, not an infinite backlog of missed copies.
+// Individual occurrence checkmarks remain in history.  The resolution cursor says
+// which past scheduled occurrences have been dealt with, without changing due dates.
+function completedRecurringThrough(task){
+ const explicit=task.fields?.recurrenceClearedThrough;
+ if(explicit)return parseDate(explicit.value)?explicit.value:'';
+ // Compatibility with backups produced before the cursor existed: the most recently
+ // completed occurrence becomes our starting point. Old unchecked days don't pile up.
+ const prefix='occ:'+task.id+':';let latest='';
+ for(const [id,record] of Object.entries(store.records)){
+   if(id.startsWith(prefix)&&record.kind==='occurrence'&&g(record,'done',false)){
+     const day=id.slice(prefix.length);if(parseDate(day)&&day>latest)latest=day;
+   }
+ }
+ return latest;
+}
+function setDone(task,date,value,resolveThrough=''){
+ if(date&&g(task,'recurrence')!=='none'){
+   const id=occurrenceId(task,date);let r=store.records[id];
+   if(!r)r=createRecord('occurrence',{task:task.id,date,done:value},id);
+   else setField(r,'done',value);
+   const cleared=completedRecurringThrough(task);
+   if(value){
+     const through=parseDate(resolveThrough)&&resolveThrough>date?resolveThrough:date;
+     if(through>cleared)setField(task,'recurrenceClearedThrough',through);
+   }else if(date<=cleared){
+     // Undo can reopen this occurrence without manufacturing any new task records.
+     setField(task,'recurrenceClearedThrough',addDays(date,-1));
+   }
+ }else setField(task,'done',value);
+ scheduleSave();
+}
+
+// Central date resolution: due date wins; undated daily and weekday entries inherit their original day.
+// Backlog, generic Weekly priorities and generic Monthly sections remain unscheduled until dated.
+function taskDate(t){if(g(t,'dateMode','')==='anytime')return '';const due=g(t,'due','');if(parseDate(due))return due;const scope=g(t,'scope','');const id=g(t,'section','');return (id==='weekly-days'||id.startsWith('daily-'))&&parseDate(scope)?scope:''}
+function isAnytime(t){return !taskDate(t)&&g(t,'recurrence','none')==='none'}
+function anytimeOnDaily(t,date=focusDates.daily){const start=g(t,'anytimeFrom','')||g(t,'startDate','')||String(g(t,'created','')).slice(0,10);return isAnytime(t)&&(g(t,'anytimeOnDaily',false)||g(t,'section','').startsWith('daily-'))&&(!parseDate(start)||date>=start)}
+function setAnytime(task){
+  setField(task,'dateMode','anytime');setField(task,'due','');setField(task,'anytimeFrom',active==='daily'?focusDates.daily:isoDate());
+  setField(task,'anytimeOnDaily',!['backlog-','anytime-'].some(prefix=>g(task,'section','').startsWith(prefix)));
+  if(g(task,'recurrence','none')!=='none')setField(task,'recurrence','none');
+}
+
+function datedTasksOn(date){const results=[];for(const task of items('task')){if(g(task,'recurrence','none')!=='none'){if(recurrenceMatches(task,date))results.push({task,day:date,repeat:true});continue}if(taskDate(task)===date)results.push({task,day:null})}return results.sort((a,b)=>g(a.task,'order',0)-g(b.task,'order',0)||g(a.task,'text','').localeCompare(g(b.task,'text','')))}
+// A dated unfinished job follows the selected Daily date until completion.
+// Recurrent jobs are different: a missed daily/weekly occurrence must not generate
+// another overdue task for every day or week. Only ONE unresolved instance per
+// recurring job is presented; its original recurrence and all subtasks are retained.
+function firstPendingRecurringDay(task,date){
+ const start=g(task,'startDate','')||g(task,'due','');
+ if(!parseDate(start)||start>date)return '';
+ const through=completedRecurringThrough(task);
+ let candidate=through&&through>=start?addDays(through,1):start;
+ if(candidate>date)return '';
+ // Date arithmetic is bounded by the selected range, with no persisted copies.
+ // Handle far-future dates without creating thousands of individual records.
+ const startTime=parseDate(candidate).getTime(),endTime=parseDate(date).getTime();
+ const span=Math.min(366000,Math.ceil((endTime-startTime)/86400000)+1);
+ for(let n=0;n<=span;n++){
+   const day=addDays(candidate,n);
+   if(day>date)break;
+   if(recurrenceMatches(task,day)&&!doneFor(task,day))return day;
+ }
+ return '';
+}
+function firstUpcomingRecurringDay(task,date){
+ for(let offset=1;offset<=7;offset++){
+   const day=addDays(date,offset);
+   if(recurrenceMatches(task,day)&&!doneFor(task,day))return day;
+ }
+ return '';
+}
+function outstandingTasksThrough(date){
+ const results=[];
+ for(const task of items('task')){
+   if(g(task,'recurrence','none')!=='none'){
+     const pending=firstPendingRecurringDay(task,date);
+     if(pending){results.push({task,day:pending,repeat:true,overdue:pending<date});}
+     else if(recurrenceMatches(task,date)&&doneFor(task,date)){
+       // Completed occurrence is retained on its own day if Show completed is on.
+       results.push({task,day:date,repeat:true,overdue:false});
+     }else{
+       const upcoming=firstUpcomingRecurringDay(task,date);
+       if(upcoming)results.push({task,day:upcoming,repeat:true,overdue:false,upcoming:true});
+     }
+     continue;
+   }
+   const originalDate=taskDate(task);
+   if(originalDate&&originalDate<=date&&(originalDate===date||!doneFor(task))){
+     results.push({task,day:null,overdue:originalDate<date});
+   }else if(originalDate&&originalDate>date&&originalDate<=addDays(date,7)&&!doneFor(task)){
+     results.push({task,day:null,overdue:false,upcoming:true});
+   }else if(!originalDate&&anytimeOnDaily(task,date)&&!doneFor(task)){
+     results.push({task,day:null,overdue:false,anytime:true});
+   }
+ }
+ return results.sort((a,b)=>{
+   const da=a.day||taskDate(a.task),db=b.day||taskDate(b.task);
+   return (da===date?1:0)-(db===date?1:0)||da.localeCompare(db)||g(a.task,'order',0)-g(b.task,'order',0);
+ });
+}
+
+const SORT_OPTIONS=[['focus','Focus: overdue → priority → due date'],['due','Due date: earliest first'],['priority','Priority: high first'],['manual','Manual: my order']];
+function entryDate(entry){return entry.day||taskDate(entry.task)||''}
+function entryOverdue(entry,reference){const due=entryDate(entry);return Boolean(due&&due<reference&&!doneFor(entry.task,entry.day))}
+function taskEnergy(task){const value=g(task,'energy',null);return ['low','standard','high'].includes(value)?value:(g(task,'priority','normal')==='low'?'low':'standard')}
+function dueSoon(entry,referenceDate=isoDate()){const due=entryDate(entry);return Boolean(due&&!doneFor(entry.task,entry.day)&&due>=referenceDate&&due<=addDays(referenceDate,7))}
+function dueSoonFuture(entry,referenceDate=isoDate()){const due=entryDate(entry);return Boolean(due&&!doneFor(entry.task,entry.day)&&due>referenceDate&&due<=addDays(referenceDate,7))}
+function priorityRank(task){return ({high:0,normal:1,low:2})[g(task,'priority','normal')]??1}
+function entryManualOrder(entry){const n=Number(g(entry.task,'order',0));return Number.isFinite(n)?n:0}
+function compareManual(a,b){return entryManualOrder(a)-entryManualOrder(b)||g(a.task,'created','').localeCompare(g(b.task,'created',''))||a.task.id.localeCompare(b.task.id)}
+function sortEntries(entries,mode='focus',referenceDate=isoDate()){
+ const list=entries.slice();
+ list.sort((a,b)=>{
+   const doneA=doneFor(a.task,a.day),doneB=doneFor(b.task,b.day);
+   if(doneA!==doneB)return Number(doneA)-Number(doneB);
+   const p=priorityRank(a.task)-priorityRank(b.task),due=(entryDate(a)||'9999-12-31').localeCompare(entryDate(b)||'9999-12-31');
+   const late=Number(entryOverdue(b,referenceDate))-Number(entryOverdue(a,referenceDate));
+   if(mode==='manual')return compareManual(a,b);
+   if(mode==='priority')return p||late||due||compareManual(a,b);
+   if(mode==='due')return due||late||p||compareManual(a,b);
+   return late||p||due||compareManual(a,b);
+ });
+ return list;
+}
+function sortedForPlan(entries,view=active){return sortEntries(entries,store.prefs.sortMode||'focus',view==='daily'?focusDates.daily:isoDate())}
+function taskCanReorder(entries,taskId){return entries.length>1&&entries.some(x=>x.task.id===taskId)}
+function moveTaskInList(visibleEntries,taskId,direction){
+ const entries=visibleEntries.filter(e=>store.prefs.showDone||!doneFor(e.task,e.day));
+ const at=entries.findIndex(e=>e.task.id===taskId),target=at+direction;
+ if(at<0||target<0||target>=entries.length)return false;
+ const unique=[];const seen=new Set();
+ for(const e of entries)if(!seen.has(e.task.id)){unique.push(e.task);seen.add(e.task.id)}
+ const from=unique.findIndex(t=>t.id===taskId),other=from+direction;
+ if(from<0||other<0||other>=unique.length)return false;
+ [unique[from],unique[other]]=[unique[other],unique[from]];
+ unique.forEach((t,i)=>setField(t,'order',i+1));
+ store.prefs.sortMode='manual';scheduleSave();render();showToast('Task moved · Manual order selected');return true;
+}
+function visibleTaskEntries(entries,view=active){return entries.filter(e=>(store.prefs.showDone||!doneFor(e.task,e.day))&&!(view==='daily'&&store.prefs.overdueOnly&&!entryOverdue(e,focusDates.daily)))}
+function currentPrintSort(){const mode=store.prefs.printSortMode||'focus';return mode==='plan'?(store.prefs.sortMode||'focus'):mode}
+function sortedForPrint(entries,view){return sortEntries(entries,currentPrintSort(),view==='daily'?focusDates.daily:isoDate())}
+const DAILY_GROUPS=[['overdue','Overdue'],['soon','Due soon (7 days)'],['high','High priority'],['normal','Normal priority'],['low','Low energy']];
+function dailyGroupFor(entry,referenceDate=focusDates.daily){
+ if(entryOverdue(entry,referenceDate))return 'overdue';
+ if(dueSoon(entry,referenceDate))return 'soon';
+ const p=g(entry.task,'priority','normal');return p==='high'?'high':taskEnergy(entry.task)==='low'?'low':'normal';
+}
+function groupedDailyEntries(entries,sortMode='due',referenceDate=focusDates.daily){
+ const result=DAILY_GROUPS.map(([key,label])=>({key,label,entries:[]}));
+ for(const entry of entries){result.find(g=>g.key===dailyGroupFor(entry,referenceDate)).entries.push(entry)}
+ for(const group of result)group.entries=sortEntries(group.entries,sortMode,referenceDate);
+ return result;
+}
+function monthTasks(month){const first=month+'-01',d=parseDate(first);if(!d)return [];const n=new Date(d.getFullYear(),d.getMonth()+1,0).getDate(),all=[];for(let i=0;i<n;i++)all.push(...datedTasksOn(addDays(first,i)));return all.sort((a,b)=>taskDate(a.task).localeCompare(taskDate(b.task))||g(a.task,'text','').localeCompare(g(b.task,'text','')))}
+function classifyTask(t){return g(t,'category',categoryForDailySection(g(t,'section',''))) || 'Work'}
+function setTaskDate(t,date){
+ if(date&&!parseDate(date))return false;
+ if(!date){setAnytime(t);return true}
+ setField(t,'dateMode','dated');setField(t,'due',date);setField(t,'anytimeOnDaily',false);
+ if((g(t,'section')==='weekly-days'||g(t,'section','').startsWith('daily-'))&&parseDate(date))setField(t,'scope',date);
+ return true;
+}
+function allMonthlyDue(date,weekly=false){const from=weekly?date:date,end=weekly?addDays(date,6):date;return items('task').filter(t=>['monthly-radar','monthly-radar-extra'].includes(g(t,'section'))&&g(t,'due')&&((g(t,'due')>=from&&g(t,'due')<=end)||(store.prefs.showOverdue&&!weekly&&g(t,'due')<date&&!g(t,'done')))).sort((a,b)=>g(a,'due').localeCompare(g(b,'due')))}
+function recurringOn(date){return items('task').filter(t=>g(t,'recurrence')!=='none'&&recurrenceMatches(t,date))}
+function tasksShown(module,view,scope){
+ const id=module.id,type=g(module,'type');
+ if(type==='radar')return []; // The deadline feed is a summary: actual tasks appear once, in their categorised Daily/Weekly views.
+ if(view==='daily'&&type==='tasks'){
+   return outstandingTasksThrough(focusDates.daily).filter(e=>dailySectionFor(e.task)===id);
+ }
+ if(view==='anytime'&&type==='tasks')return items('task').filter(isAnytime).map(task=>({task,day:null,anytime:true}));
+ if(view==='monthly'&&type==='tasks'&&(id==='monthly-radar'||id==='monthly-radar-extra')){
+   // The primary list shows every dated task that is also present in the calendar. The extra
+   // box is a continuation for any entries specifically created in that secondary box.
+   const entries=monthTasks(focusDates.monthly);
+   return id==='monthly-radar'?entries:entries.filter(e=>g(e.task,'section')==='monthly-radar-extra');
+ }
+ const ordinary=tasksFor(id,scope).map(task=>({task,day:null}));
+ if(view==='weekly'&&type==='tasks'){
+   const from=focusDates.weekly,to=addDays(from,6);
+   for(const task of items('task'))if(g(task,'section')===id&&g(task,'due')>=from&&g(task,'due')<=to&&!ordinary.some(e=>e.task.id===task.id))ordinary.push({task,day:null});
+ }
+ return ordinary;
+}
+function moduleWidth(m){return Math.max(3,Math.round(g(m,'w',6)))}
+function batchToken(id,day){return id+'|'+(day||'')}
+function selectedBatchItems(){return [...batchSelected.values()].map(x=>({...x,task:store.records[x.id]})).filter(x=>x.task?.kind==='task'&&!g(x.task,'deleted',false))}
+function updateBatchToolbar(){for(const el of document.querySelectorAll('[data-batch-count]'))el.textContent=batchSelected.size+' selected'}
+function toggleBatchMode(){batchMode=!batchMode;batchSelected.clear();render()}
+function selectVisibleTasks(){for(const el of document.querySelectorAll('.task-item[data-task-id]')){const id=el.dataset.taskId,day=el.dataset.day||null;batchSelected.set(batchToken(id,day),{id,day})}render()}
+function finishBatch(label){batchSelected.clear();batchMode=false;render();showToast(label)}
+function applyBatchChanges(action,value){
+ const selected=selectedBatchItems();if(!selected.length){showToast('Select at least one task');return}
+ const unique=[...new Map(selected.map(x=>[x.id,x.task])).values()];
+ if(action==='archive'){
+  confirmAction('Archive selected tasks?',`Archive ${unique.length} selected task(s)? You can restore them from Recently archived.`,()=>{
+   for(const task of unique)setField(task,'deleted',true);
+   finishBatch(unique.length+' task(s) archived');
+  },'Archive selected');return;
+ }
+ if(action==='date'&&!parseDate(value)){showToast('Choose a valid due date');return}
+ for(const task of unique){
+   if(action==='category'){setField(task,'category',value);setField(task,'dailySection',TASK_CATEGORIES.find(x=>x[0]===value)?.[1]||'daily-work')}
+   if(action==='priority')setField(task,'priority',value);
+   if(action==='energy')setField(task,'energy',value);
+   if(action==='date')setTaskDate(task,value);
+   if(action==='anytime')setAnytime(task);
+ }
+ if(action==='complete')for(const row of selected){
+   const date=row.day&&g(row.task,'recurrence','none')!=='none'?row.day:null;
+   setDone(row.task,date,true,date&&active==='daily'?isoDate():'');
+ }
+ const names={complete:'completed',category:'recategorised',priority:'re-prioritised',energy:'updated',date:'rescheduled',anytime:'changed to Anytime'};
+ finishBatch(selected.length+' selected task(s) '+(names[action]||'updated'));
+}
+function renderBatchBar(root){
+ const bar=document.createElement('div');bar.className='batch-toolbar';bar.id='batch-toolbar';
+ bar.innerHTML=`<span class="batch-count" data-batch-count>0 selected</span><button class="button small" id="batch-all">Select visible</button><button class="button small" id="batch-clear">Clear selection</button><button class="button small blue" id="batch-complete">✓ Complete</button><button class="button small" id="batch-archive">Archive…</button><select id="batch-category" aria-label="Batch category"><option value="">Move category…</option>${TASK_CATEGORIES.map(([v])=>`<option value="${v}">${v}</option>`).join('')}</select><select id="batch-priority" aria-label="Batch priority"><option value="">Set priority…</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select><select id="batch-energy" aria-label="Batch energy"><option value="">Energy requirement…</option><option value="low">Low energy</option><option value="standard">Standard</option><option value="high">High energy</option></select><input id="batch-date" type="date" aria-label="Batch due date"><button class="button small" id="batch-date-apply">Set due date</button><button class="button small" id="batch-anytime">No due date</button>`;
+ root.append(bar);updateBatchToolbar();
+ bar.querySelector('#batch-all').onclick=selectVisibleTasks;
+ bar.querySelector('#batch-clear').onclick=()=>{batchSelected.clear();render()};
+ bar.querySelector('#batch-complete').onclick=()=>applyBatchChanges('complete');
+ bar.querySelector('#batch-archive').onclick=()=>applyBatchChanges('archive');
+ for(const field of ['category','priority','energy'])bar.querySelector('#batch-'+field).onchange=e=>{if(e.target.value)applyBatchChanges(field,e.target.value)};
+ bar.querySelector('#batch-date-apply').onclick=()=>applyBatchChanges('date',bar.querySelector('#batch-date').value);
+ bar.querySelector('#batch-anytime').onclick=()=>applyBatchChanges('anytime');
+}
+function renderPlan(root){const actions=document.createElement('div');actions.className='controls-row';actions.innerHTML=`${active==='daily'?'<span class="auto-carry-hint">↻ Overdue tasks appear automatically · original due dates kept</span>':''}<button class="button" id="add-section">＋ Add section</button><button class="button" id="recover-tasks">↶ Recently archived</button><button class="button" id="batch-toggle" aria-pressed="${batchMode}">${batchMode?"Cancel selection":"☑ Select tasks"}</button><button class="button" id="toggle-done">${store.prefs.showDone?'Hide':'Show'} completed</button><button class="button" id="toggle-calendar" style="display:${active==='monthly'?'':'none'}">${store.prefs.showCalendar===false?'Show':'Hide'} calendar</button><button class="button" id="toggle-rules">Writing lines: ${store.prefs.showRules?'On':'Off'}</button>${active==='daily'?`<button class="button" id="toggle-overdue-only" aria-pressed="${store.prefs.overdueOnly?'true':'false'}">${store.prefs.overdueOnly?'✓ Overdue only':'Show overdue only'}</button>`:''}<label class="plan-sort-label" for="plan-sort">Sort tasks <select id="plan-sort">${SORT_OPTIONS.map(([v,label])=>`<option value="${v}" ${store.prefs.sortMode===v?'selected':''}>${label}</option>`).join('')}</select></label>`;root.append(actions);if(batchMode)renderBatchBar(root);actions.querySelector('#batch-toggle').onclick=toggleBatchMode;actions.querySelector('#toggle-calendar').onclick=()=>{setPreference('showCalendar',store.prefs.showCalendar===false);render()};actions.querySelector('#add-section').onclick=addSectionDialog;actions.querySelector('#recover-tasks').onclick=recoverArchivedDialog;actions.querySelector('#toggle-done').onclick=()=>{setPreference('showDone',!store.prefs.showDone);render()};actions.querySelector('#toggle-rules').onclick=()=>{setPreference('showRules',!store.prefs.showRules);render()};actions.querySelector('#plan-sort').onchange=e=>{store.prefs.sortMode=e.target.value;scheduleSave();render()};if(active==='daily')actions.querySelector('#toggle-overdue-only').onclick=()=>{store.prefs.overdueOnly=!store.prefs.overdueOnly;scheduleSave();render()};
+ if(active==='monthly'&&store.prefs.showCalendar!==false)renderMonthOverview(root);
+ const grid=document.createElement('div');grid.className='planner-grid';root.append(grid);for(const mod of modulesFor(active)){if(!store.prefs.pages[active]?.includes(g(mod,'page')))continue;const card=document.createElement('section');card.className='section-card';card.style.gridColumn=`span ${Math.min(12,Math.max(4,g(mod,'w',6)))}`;const typ=g(mod,'type'),scope=scopeFor(active,mod.id);const head=document.createElement('div');head.className='section-head';const title=document.createElement('h3');title.textContent=(typ==='radar'&&g(mod,'title')==='Scheduled from monthly radar')?'Outstanding tasks overview':g(mod,'title');head.append(title);const badges=document.createElement('div');badges.className='section-actions';const b=document.createElement('span');b.className='count';b.textContent=typ==='notes'?'Notes':typ==='weekdays'?'7 days':'Tasks';badges.append(b);if(g(mod,'page')>1){const pg=document.createElement('span');pg.className='badgetext';pg.textContent='Page '+g(mod,'page');badges.append(pg)}head.append(badges);card.append(head);const body=document.createElement('div');body.className='section-body';card.append(body);if(typ==='notes'){const ta=document.createElement('textarea');ta.className='notes-area';ta.value=getNote(mod.id,scope);ta.placeholder='Write anything here…';ta.setAttribute('aria-label',g(mod,'title'));if(!store.prefs.showRules)ta.style.background='white';ta.addEventListener('input',()=>saveNote(mod.id,scope,ta.value));body.append(ta)}else if(typ==='weekdays'){renderWeekdays(body,mod)}else renderTaskSection(body,mod,scope);grid.append(card)}
+ if(!grid.childElementCount){const p=document.createElement('div');p.className='notice';p.textContent='No sections are visible. Open Edit layout to add or show sections.';root.append(p)}}
+
+function calendarEntriesOn(date){return datedTasksOn(date).map(entry=>entry.task)}
+function calendarCategory(task){return classifyTask(task)}
+function addCalendarDeadline(date){const dlg=modal('Add event or task · '+readableDate(date,{weekday:'long',day:'numeric',month:'long'}),`<div class="field"><label for="cal-new-text">Description</label><input id="cal-new-text" maxlength="2000" placeholder="What needs doing?"></div><div class="field"><label for="cal-new-date">Date</label><input id="cal-new-date" type="date" value="${esc(date)}"></div><div class="field"><label for="cal-new-category">Category / Daily destination</label><select id="cal-new-category">${TASK_CATEGORIES.map(([k])=>`<option value="${esc(k)}">${esc(k)}</option>`).join('')}</select></div>`,[{label:'Cancel',run:close=>close()},{label:'Add to calendar',css:'blue',run:close=>{const txt=dlg.body.querySelector('#cal-new-text').value.trim(),day=dlg.body.querySelector('#cal-new-date').value,cat=dlg.body.querySelector('#cal-new-category').value;if(!txt||!parseDate(day)){showToast('Enter a task and valid date');return}newTask('monthly-radar',monthOf(day),txt,{due:day,category:cat});close();render();showToast('Added to Monthly, Weekly and Daily radar')}}]);dlg.body.querySelector('#cal-new-text').focus()}
+function renderMonthOverview(root){
+ const year=+focusDates.monthly.slice(0,4),month=+focusDates.monthly.slice(5,7);if(!(year>=1900&&year<=9999&&month>=1&&month<=12))return;
+ const card=document.createElement('section');card.className='section-card month-overview';const header=document.createElement('div');header.className='section-head';const heading=document.createElement('h3');heading.textContent=new Date(year,month-1,1).toLocaleDateString('en-GB',{month:'long',year:'numeric'})+' · Calendar';header.append(heading);const toolbar=document.createElement('div');toolbar.className='month-toolbar';const add=document.createElement('button');add.className='button small';add.textContent='＋ Add event';add.onclick=()=>addCalendarDeadline(focusDates.monthly+'-01');const hide=document.createElement('button');hide.className='button small';hide.textContent='Hide calendar';hide.onclick=()=>{setPreference('showCalendar',false);render()};toolbar.append(add,hide);header.append(toolbar);card.append(header);
+ const grid=document.createElement('div');grid.className='month-grid';for(const name of ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']){const h=document.createElement('div');h.className='month-weekday';h.textContent=name;grid.append(h)}
+ const first=focusDates.monthly+'-01',start=addDays(first,-((parseDate(first).getDay()+6)%7));const last=new Date(year,month,0).getDate(),cellCount=Math.ceil((((parseDate(first).getDay()+6)%7)+last)/7)*7;
+ for(let i=0;i<cellCount;i++){const day=addDays(start,i),current=monthOf(day)===focusDates.monthly,cell=document.createElement('div');cell.className='month-day'+(!current?' outside':'')+(day===isoDate()?' today':'');const dayBtn=document.createElement('button');dayBtn.className='day-number';dayBtn.type='button';dayBtn.textContent=String(parseDate(day).getDate());dayBtn.title='Open Daily '+readableDate(day);dayBtn.setAttribute('aria-label','Open daily planner for '+readableDate(day));dayBtn.onclick=()=>{focusDates.daily=day;setTab('daily')};cell.append(dayBtn);
+ const tasks=sortEntries(datedTasksOn(day),store.prefs.sortMode||'focus',isoDate()).map(e=>e.task);for(const t of tasks.slice(0,3)){const chip=document.createElement('button');const cat=calendarCategory(t),done=doneFor(t,g(t,'recurrence','none')==='none'?null:day);chip.className='cal-task'+(cat==='Personal'?' personal':cat==='Appt'?' appt':'')+(done?' done':'')+(g(t,'priority','normal')==='high'?' high':'')+(!done&&day<isoDate()?' overdue':'');const progress=subtaskProgress(t,g(t,'recurrence','none')==='none'?null:day);chip.textContent=(g(t,'priority','normal')==='high'?'★ ':'')+(cat==='Personal'?'⌂ ':cat==='Appt'?'◷ ':'')+g(t,'text','').slice(0,55)+(progress.total?` · ${progress.completed}/${progress.total}`:'');chip.title=g(t,'text','')+' · '+cat+' · Open day';chip.onclick=()=>{focusDates.daily=day;setTab('daily')};cell.append(chip)}if(tasks.length>3){const rest=document.createElement('div');rest.className='cal-more';rest.textContent='+'+(tasks.length-3)+' more';cell.append(rest)}const dayAdd=document.createElement('button');dayAdd.className='cal-add';dayAdd.textContent='+';dayAdd.title='Add task for '+readableDate(day);dayAdd.setAttribute('aria-label','Add task for '+readableDate(day));dayAdd.onclick=()=>addCalendarDeadline(day);cell.append(dayAdd);grid.append(cell)}card.append(grid);
+ const legend=document.createElement('div');legend.className='month-legend';legend.innerHTML='<span>Blue: work/other</span><span>Green: personal</span><span>Orange: appointments</span><span>Select any day to open its Daily plan</span>';card.append(legend);root.append(card);
+}
+function renderWeekdays(body,mod){
+ const wrap=document.createElement('div');wrap.className='day-grid';
+ for(let i=0;i<7;i++){
+   const date=addDays(focusDates.weekly,i),d=document.createElement('div');d.className='day-card';
+   const head=document.createElement('header');head.innerHTML=`${esc(readableDate(date,{weekday:'long'}))}<small>${esc(readableDate(date,{day:'numeric',month:'short'}))}</small>`;d.append(head);
+   const list=document.createElement('div');list.className='task-list';
+   const entries=visibleTaskEntries(sortedForPlan(datedTasksOn(date)),'weekly');for(const [index,ent] of entries.entries())list.append(taskElement(ent,{scope:date,onReorder:direction=>moveTaskInList(entries,ent.task.id,direction),first:index===0,last:index===entries.length-1}));
+   d.append(list);d.append(addTaskRow(mod.id,date,'Add to '+readableDate(date,{weekday:'long'})));wrap.append(d);
+ }body.append(wrap)
+}
+function renderTaskSection(body,mod,scope){
+ if(g(mod,'type')==='radar'){
+   const entries=active==='daily'?outstandingTasksThrough(focusDates.daily):
+     Array.from({length:7},(_,i)=>datedTasksOn(addDays(focusDates.weekly,i))).flat();
+   const overdue=active==='daily'?entries.filter(e=>(e.day||taskDate(e.task))<focusDates.daily&&!doneFor(e.task,e.day)).length:0;
+   const due=entries.filter(e=>!doneFor(e.task,e.day)&&!e.overdue&&Boolean(entryDate(e))&&entryDate(e)===focusDates.daily).length;
+   const anytime=entries.filter(e=>!doneFor(e.task,e.day)&&!entryDate(e)).length;
+   const soon=entries.filter(e=>dueSoonFuture(e,focusDates.daily)).length;
+   const info=document.createElement('div');info.className='radar-summary';
+   const dayLabel=focusDates.daily===isoDate()?'today':'on this date';
+   info.innerHTML=active==='daily'?`<strong>${overdue} overdue job${overdue===1?'':'s'}</strong> · ${due} due ${dayLabel} · ${soon} due soon · ${anytime} anytime <span>Each unfinished job is counted once. Repeating tasks never accumulate thousands of missed copies; their schedules and original dates remain intact.</span>`:`<strong>${due} unfinished this week</strong><span>See the correct weekday below. Tasks remain visible in Daily until completed.</span>`;
+   body.append(info);return;
+ }
+ const entries=visibleTaskEntries(sortedForPlan(tasksShown(mod,active,scope)));
+ if(active==='daily'&&g(mod,'type')==='tasks'){
+   const groups=groupedDailyEntries(entries,store.prefs.sortMode==='manual'?'manual':'due');
+   const wrapper=document.createElement('div');wrapper.className='task-groups';
+   for(const group of groups){
+     const panel=document.createElement('section');panel.className='task-group task-group-'+group.key+(group.entries.length?'':' is-empty');
+     const header=document.createElement('header');header.className='task-group-header';
+     header.innerHTML=`<span>${esc(group.label)}</span><span class="task-group-count">${group.entries.length}</span>`;
+     const body=document.createElement('div');body.className='task-group-body';
+     for(const [index,ent] of group.entries.entries())body.append(taskElement(ent,{scope,onReorder:direction=>moveTaskInList(group.entries,ent.task.id,direction),first:index===0,last:index===group.entries.length-1}));
+     panel.append(header);if(group.entries.length)panel.append(body);wrapper.append(panel);
+   }
+   body.append(wrapper);
+ }else{
+   const list=document.createElement('div');list.className='task-list';
+   for(const [index,ent] of entries.entries())list.append(taskElement(ent,{scope,feed:g(mod,'type')==='radar',onReorder:direction=>moveTaskInList(entries,ent.task.id,direction),first:index===0,last:index===entries.length-1}));
+   if(!entries.length){const empty=document.createElement('div');empty.className='empty';empty.textContent='Nothing here yet.';list.append(empty)}
+   body.append(list);
+ }
+ if(g(mod,'type')!=='radar')body.append(addTaskRow(mod.id,scope,`Add ${g(mod,'title').toLowerCase()} task`));
+}
+function addTaskRow(section,scope,placeholder){
+ const form=document.createElement('form');form.className='add-row';
+ const inp=document.createElement('input');inp.type='text';inp.placeholder=placeholder;inp.setAttribute('aria-label',placeholder);inp.maxLength=2000;
+ const btn=document.createElement('button');btn.className='button small blue';btn.textContent='＋ Add';btn.type='submit';
+ let date=null,cat=null;
+ const monthList=section==='monthly-radar'||section==='monthly-radar-extra';
+ const weekDay=section==='weekly-days';
+ const isDay=section.startsWith('daily-');
+ const hasDefaultDate=monthList||weekDay||isDay;
+ const dueMode=document.createElement('select');dueMode.className='tiny-select add-due-mode';dueMode.setAttribute('aria-label','New task due date');dueMode.title='Choose due date or anytime';
+ dueMode.add(new Option('Due on date','dated'));dueMode.add(new Option('No due date','anytime'));
+ dueMode.value=hasDefaultDate?'dated':'anytime';
+ form.style.flexWrap='wrap';
+
+ date=document.createElement('input');date.type='date';date.className='tiny-input';
+ date.style.cssText='font-size:.9rem;min-height:39px;max-width:160px';
+ date.value=monthList?(monthOf(isoDate())===focusDates.monthly?isoDate():focusDates.monthly+'-01'):(parseDate(scope)?scope:isoDate());
+ date.setAttribute('aria-label','New task due date value');date.hidden=dueMode.value==='anytime';
+ form.append(dueMode,date);dueMode.onchange=()=>{date.hidden=dueMode.value==='anytime'};
+ if(monthList||weekDay||section==='anytime-list'){cat=document.createElement('select');cat.className='tiny-select';cat.style.cssText='min-height:39px;max-width:170px';cat.setAttribute('aria-label','Task category');for(const [c] of TASK_CATEGORIES)cat.add(new Option(c,c));form.append(cat)}
+ const prio=document.createElement('select');prio.className='tiny-select quick-priority';prio.setAttribute('aria-label','New task priority');for(const [v,label] of [['normal','Normal priority'],['high','High priority'],['low','Low priority']])prio.add(new Option(label,v));
+ const effort=document.createElement('select');effort.className='tiny-select quick-energy';effort.setAttribute('aria-label','New task energy');for(const [v,label] of [['standard','Standard effort'],['low','Low energy'],['high','High energy']])effort.add(new Option(label,v));
+ form.append(prio,effort,inp,btn);
+ form.onsubmit=e=>{e.preventDefault();const text=inp.value.trim();if(!text)return;
+   const due=date.value;
+   if(dueMode.value==='dated'&&!parseDate(due)){showToast('Select a valid due date');return}
+   const category=cat?cat.value:(section.startsWith('daily-')?categoryForDailySection(section):(section==='backlog-home'||section==='backlog-someday'?'Personal':'Work'));
+   const more={category,dateMode:dueMode.value,priority:prio.value,energy:effort.value};
+   if(dueMode.value==='dated')more.due=due;
+   else{more.due='';more.anytimeFrom=active==='daily'?focusDates.daily:isoDate();more.anytimeOnDaily=section.startsWith('daily-')||section==='weekly-days'||section.startsWith('monthly-')}
+   if(weekDay||section.startsWith('daily-'))more.dailySection=weekDay?dailySectionFor({fields:{category:{value:category}}}):section;
+   newTask(section,scope,text,more);render();showToast('Task added and linked across views');
+ };
+ return form;
+}
+function taskElement(ent,{scope='',feed=false,compact=false,onReorder=null,first=false,last=false}={}){
+ const t=ent.task,row=document.createElement('div'),isDone=doneFor(t,ent.day),priorityValue=g(t,'priority','normal'),referenceDate=active==='daily'?focusDates.daily:isoDate(),late=entryOverdue(ent,referenceDate),soon=dueSoon(ent,referenceDate),energy=taskEnergy(t);row.className='task-item'+(isDone?' done':'')+(priorityValue==='high'?' task-high':priorityValue==='low'?' task-low':'')+(late?' task-overdue':'')+(soon&&!late?' task-soon':'');row.dataset.taskId=t.id;row.dataset.day=ent.day||'';
+ const check=document.createElement('input');check.type='checkbox';check.className='task-check';check.checked=isDone;check.setAttribute('aria-label','Complete task');check.onchange=()=>{
+   // Checking an overdue recurring job clears all missed occurrences through
+   // the currently viewed date (never through a future date beyond today).
+   const through=ent.repeat&&ent.overdue&&active==='daily'
+     ?(focusDates.daily<isoDate()?focusDates.daily:isoDate()):'';
+   setDone(t,ent.day,check.checked,through);render();
+ };
+ if(batchMode){const pick=document.createElement('input');pick.type='checkbox';pick.className='batch-selection';pick.setAttribute('aria-label','Select task for batch actions');const token=batchToken(t.id,ent.day);pick.checked=batchSelected.has(token);pick.onchange=()=>{if(pick.checked)batchSelected.set(token,{id:t.id,day:ent.day||null});else batchSelected.delete(token);updateBatchToolbar()};row.append(pick)}
+ const body=document.createElement('div');body.className='task-content';const status=document.createElement('div');status.className='task-status';if(soon&&!late&&!isDone){const badge=document.createElement('span');badge.className='badgetext status-soon';badge.textContent=entryDate(ent)===referenceDate?'◷ DUE TODAY':'◷ DUE SOON · '+readableDate(entryDate(ent));status.append(badge)}if(energy==='low'){const badge=document.createElement('span');badge.className='badgetext status-energy';badge.textContent='⚡ LOW ENERGY';status.append(badge)}if(late){const badge=document.createElement('span');badge.className='badgetext status-overdue';badge.textContent='⚠ OVERDUE · '+readableDate(entryDate(ent));status.append(badge)}if(priorityValue==='high'){const badge=document.createElement('span');badge.className='badgetext status-high';badge.textContent='★ HIGH PRIORITY';status.append(badge)}if(priorityValue==='low'){const badge=document.createElement('span');badge.className='badgetext status-low';badge.textContent='↓ LOW PRIORITY';status.append(badge)}if(status.children.length)body.append(status);const main=document.createElement('div');main.className='task-main';
+ const ta=document.createElement('textarea');ta.className='task-text';ta.rows=compact?1:(dailySectionFor(t)==='daily-work'?3:1);ta.value=g(t,'text');ta.setAttribute('aria-label','Task description');ta.placeholder='Task';ta.addEventListener('input',()=>setField(t,'text',ta.value));main.append(ta);body.append(main);
+ const meta=document.createElement('div');meta.className='task-meta';
+ const dateString=taskDate(t),badgeDate=ent.repeat&&ent.day?ent.day:dateString;
+ if(!badgeDate){const anytimeBadge=document.createElement('span');anytimeBadge.className='badgetext';anytimeBadge.textContent='Anytime · No due date';meta.append(anytimeBadge)}
+ if(badgeDate){const badge=document.createElement('span');const referenceDate=active==='daily'?focusDates.daily:isoDate();const isOverdue=badgeDate<referenceDate&&!isDone;
+   badge.className='badgetext'+(isOverdue?' overdue':'');
+   badge.textContent=(isOverdue?'Due · ':'Due ')+readableDate(badgeDate);meta.append(badge)}
+ if(ent.repeat){const chip=document.createElement('span');chip.className='badgetext';chip.textContent='↻ Repeats';meta.append(chip)}
+ if(!compact){
+   const category=document.createElement('select');category.className='tiny-select task-category';category.setAttribute('aria-label','Task category and Daily section');category.title='Daily section';for(const [label] of TASK_CATEGORIES)category.add(new Option(label,label));category.value=classifyTask(t);category.onchange=e=>{setField(t,'category',e.target.value);setField(t,'dailySection',TASK_CATEGORIES.find(p=>p[0]===e.target.value)[1]);render()};meta.append(category);
+   const priority=document.createElement('select');priority.className='tiny-select';priority.setAttribute('aria-label','Priority');for(const [val,label] of [['normal','Normal'],['high','★ High'],['low','Low priority']])priority.add(new Option(label,val));priority.value=g(t,'priority','normal');priority.onchange=e=>{setField(t,'priority',e.target.value);render()};meta.append(priority);
+   const energySel=document.createElement('select');energySel.className='tiny-select task-energy';energySel.setAttribute('aria-label','Energy required');for(const [v,label] of [['standard','⚡ Standard effort'],['low','⚡ Low energy'],['high','⚡ High energy']])energySel.add(new Option(label,v));energySel.value=taskEnergy(t);energySel.onchange=e=>{setField(t,'energy',e.target.value);render()};meta.append(energySel);
+   if(isAnytime(t)){const showDaily=document.createElement('label');showDaily.className='tiny-toggle';const cb=document.createElement('input');cb.type='checkbox';cb.checked=anytimeOnDaily(t,isoDate());cb.setAttribute('aria-label','Show anytime task on Daily');cb.onchange=e=>{setField(t,'anytimeOnDaily',e.target.checked);if(e.target.checked)setField(t,'anytimeFrom',isoDate());render()};showDaily.append(cb,document.createTextNode(' Show Daily'));meta.append(showDaily)}
+   const dateMode=document.createElement('select');dateMode.className='tiny-select task-due-mode';dateMode.setAttribute('aria-label','Due date setting');
+   dateMode.add(new Option('Due on date','dated'));dateMode.add(new Option('No due date','anytime'));
+   dateMode.value=dateString?'dated':'anytime';
+   const date=document.createElement('input');date.type='date';date.className='tiny-input task-due-date';date.value=dateString;
+   date.setAttribute('aria-label','Due date');date.title='Due date';date.hidden=!dateString;
+   dateMode.onchange=e=>{if(e.target.value==='anytime'){setAnytime(t);render()}else{setTaskDate(t,dateString||focusDates.daily||isoDate());render()}};
+   date.onchange=e=>{setTaskDate(t,e.target.value);render()};meta.append(dateMode,date);
+   if(!feed&&g(t,'section')!=='monthly-radar'&&g(t,'section')!=='monthly-radar-extra'){
+     const recurrence=document.createElement('select');recurrence.className='tiny-select';recurrence.setAttribute('aria-label','Repeat');for(const [v,l] of [['none','No repeat'],['daily','Daily'],['weekdays','Weekdays'],['weekly','Weekly'],['monthly','Monthly']])recurrence.add(new Option(l,v));recurrence.value=g(t,'recurrence','none');recurrence.onchange=e=>{
+     if(e.target.value!=='none'){
+       const anchor=taskDate(t)||isoDate();
+       if(isAnytime(t))setTaskDate(t,anchor);
+       setField(t,'startDate',anchor);
+     }
+     setField(t,'recurrence',e.target.value);render()
+   };meta.append(recurrence);
+   }
+   if(onReorder){const controls=document.createElement('span');controls.className='task-order-controls';const up=document.createElement('button');up.className='ghost';up.type='button';up.textContent='↑';up.title='Move task up (switches to Manual sorting)';up.setAttribute('aria-label','Move task up');up.disabled=first;up.onclick=()=>onReorder(-1);const down=document.createElement('button');down.className='ghost';down.type='button';down.textContent='↓';down.title='Move task down (switches to Manual sorting)';down.setAttribute('aria-label','Move task down');down.disabled=last;down.onclick=()=>onReorder(1);controls.append(up,down);meta.append(controls)}
+   const move=document.createElement('button');move.className='ghost';move.textContent='↗';move.title='Move or schedule task';move.setAttribute('aria-label','Move or schedule task');move.onclick=()=>moveTaskDialog(t);meta.append(move);
+   const deleteBtn=document.createElement('button');deleteBtn.className='ghost';deleteBtn.title='Archive task (restore available)';deleteBtn.textContent='✕';deleteBtn.setAttribute('aria-label','Archive task');deleteBtn.onclick=()=>confirmAction('Archive task?',`Archive “${g(t,'text').slice(0,100)}”? It will disappear from all views. You can restore it from Recently archived.`,()=>{setField(t,'deleted',true);render();showToast('Task archived in all views. Restore under Recently archived.')},'Archive');meta.append(deleteBtn);
+ }
+ body.append(meta);renderSubtasks(body,t,ent.day);row.append(check,body);return row;
+}
+function moveTaskDialog(task){
+ const all=modulesFor('daily').concat(modulesFor('backlog'),modulesFor('weekly'),modulesFor('monthly')).filter(m=>(g(m,'type')==='tasks'||g(m,'type')==='weekdays')&&store.prefs.pages[g(m,'view')]?.includes(g(m,'page')));
+ const dlg=modal('Move or schedule task',`<p class="muted">The same task remains linked between calendar, Weekly and Daily. Changing the category moves it to the matching Daily section. Clear the due date for an anytime task.</p><div class="field"><label for="move-target">Original list / destination</label><select id="move-target">${all.map(a=>`<option value="${esc(a.id)}" ${a.id===g(task,'section')?'selected':''}>${esc(VIEW_NAMES[g(a,'view')])} · ${esc(g(a,'title'))}</option>`).join('')}</select></div><div class="field"><label for="move-due-mode">Due date</label><select id="move-due-mode"><option value="dated" ${taskDate(task)?'selected':''}>Due on date</option><option value="anytime" ${!taskDate(task)?'selected':''}>No due date</option></select></div><div class="field"><label for="move-date">Date</label><input id="move-date" type="date" value="${esc(taskDate(task)||isoDate())}" ${!taskDate(task)?'hidden':''}></div><div class="field"><label for="move-category">Category / Daily section</label><select id="move-category">${TASK_CATEGORIES.map(([label])=>`<option value="${esc(label)}" ${label===classifyTask(task)?'selected':''}>${esc(label)}</option>`).join('')}</select></div>`,[
+ {label:'Cancel',run:close=>close()},{label:'Save changes',css:'blue',run:close=>{
+   const sel=dlg.body.querySelector('#move-target').value,mod=moduleById(sel),date=dlg.body.querySelector('#move-date').value,category=dlg.body.querySelector('#move-category').value;
+   if(!mod||date&&!parseDate(date)){showToast('Choose a valid date');return}
+   const dueMode=dlg.body.querySelector('#move-due-mode').value;
+   const selectedDate=dueMode==='anytime'?'':date;
+   const view=g(mod,'view'),scope=view==='backlog'?'all':view==='monthly'?monthOf(date||isoDate()):g(mod,'type')==='weekdays'?date:view==='weekly'?monday(date||isoDate()):date;
+   setField(task,'section',sel);setField(task,'scope',scope);setField(task,'category',category);setField(task,'dailySection',TASK_CATEGORIES.find(([c])=>c===category)[1]);setTaskDate(task,selectedDate);
+   close();render();showToast('Updated in Daily, Weekly and Monthly');
+ }}]);
+ dlg.body.querySelector('#move-due-mode').onchange=e=>{dlg.body.querySelector('#move-date').hidden=e.target.value==='anytime'};
+}
+function recoverArchivedDialog(){const archived=Object.values(store.records).filter(r=>r.kind==='task'&&g(r,'deleted',false)&&!g(r,'supersededBy','')).sort((a,b)=>g(b,'created','').localeCompare(g(a,'created','')));if(!archived.length){showToast('No archived tasks to restore');return}const dialog=modal('Restore archived tasks',`<p class="muted">Archived tasks stay in your data and exports until you restore them.</p><div id="archived-list" class="conflicts-list"></div>`,[{label:'Close',run:close=>close()}]);const list=dialog.body.querySelector('#archived-list');for(const task of archived.slice(0,100)){const div=document.createElement('div');div.className='task-item';const lbl=document.createElement('div');lbl.className='task-content';lbl.textContent=g(task,'text')||'(empty task)';const btn=document.createElement('button');btn.className='button small';btn.textContent='Restore';btn.onclick=()=>{setField(task,'deleted',false);div.remove();showToast('Task restored');render()};div.append(lbl,btn);list.append(div)}}
+function layoutRect(mod){return {x:+g(mod,'x',0),y:+g(mod,'y',0),w:+g(mod,'w',6),h:+g(mod,'h',8),page:+g(mod,'page',1)}}
+function intersects(a,b){return a.page===b.page&&a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y}
+function collides(id,rect){return modulesFor(active,rect.page).some(m=>m.id!==id&&intersects(rect,layoutRect(m)))}
+const layoutHistory=[];
+function updateRect(mod,changes,notify=true){
+ const old=layoutRect(mod),target={...old,...changes};
+ target.w=clamp(Math.round(target.w),2,TOTAL_COLS);target.h=clamp(Math.round(target.h),2,TOTAL_ROWS);
+ target.x=clamp(Math.round(target.x),0,TOTAL_COLS-target.w);target.y=clamp(Math.round(target.y),0,TOTAL_ROWS-target.h);
+ target.page=clamp(Math.round(target.page),1,50);
+ if(JSON.stringify(old)===JSON.stringify(target))return true;
+ const peers=items('module').filter(m=>g(m,'view')===active&&!g(m,'hidden',false)&&m.id!==mod.id);
+ const originals=new Map(peers.map(m=>[m.id,layoutRect(m)]));
+ const final=new Map([[mod.id,target]]), collideWith=(rect)=>[...final.values()].some(r=>intersects(r,rect));
+ const overlaps=peers.filter(m=>intersects(target,originals.get(m.id)));
+ const remaining=peers.filter(m=>!overlaps.includes(m)).concat(overlaps);
+ const moving=target.w===old.w&&target.h===old.h&&(target.x!==old.x||target.y!==old.y||target.page!==old.page);
+ if(moving&&overlaps.length===1){const other=overlaps[0],r=originals.get(other.id);
+   let swap={...r,x:old.x,y:old.y,page:old.page};
+   if(swap.x+swap.w>TOTAL_COLS||swap.y+swap.h>TOTAL_ROWS||intersects(target,swap))swap={...old};
+   if(!intersects(target,swap)){
+      final.set(other.id,swap);
+      remaining.splice(remaining.indexOf(other),1);
+   }
+ }
+ for(const other of remaining){
+    const r=originals.get(other.id);
+    if(!collideWith(r)){final.set(other.id,r);continue}
+    if(!moving){
+      const possible=[
+        {...r,w:target.x-r.x},
+        {...r,x:target.x+target.w,w:r.x+r.w-(target.x+target.w)},
+        {...r,h:target.y-r.y},
+        {...r,y:target.y+target.h,h:r.y+r.h-(target.y+target.h)}
+      ].filter(v=>v.w>=2&&v.h>=2&&v.x>=0&&v.y>=0&&v.x+v.w<=TOTAL_COLS&&v.y+v.h<=TOTAL_ROWS&&!collideWith(v));
+      possible.sort((a,b)=>(b.w*b.h-a.w*a.h));
+      if(possible.length){final.set(other.id,possible[0]);continue}
+    }
+    let found=null,best=Infinity;const pages=[...new Set([...store.prefs.pages[active],target.page,r.page])].sort((a,b)=>a-b);
+    for(const page of pages){for(let y=0;y<=TOTAL_ROWS-r.h;y++)for(let x=0;x<=TOTAL_COLS-r.w;x++){
+      const candidate={...r,page,x,y};if(collideWith(candidate))continue;
+      const score=Math.abs(x-r.x)+Math.abs(y-r.y)+Math.abs(page-r.page)*70;
+      if(score<best){best=score;found=candidate}
+    }}
+    if(!found){
+       const used=[...new Set([...store.prefs.pages[active],...[...final.values()].map(x=>x.page)])];let next=1;
+       while(used.includes(next)&&next<=50)next++;
+       if(next>50){if(notify)showToast('No room left: maximum 50 A4 pages reached.');return false}
+       found={...r,x:0,y:0,page:next};
+    }
+    final.set(other.id,found);
+ }
+ const current=items('module').filter(m=>g(m,'view')===active&&!g(m,'hidden',false));
+ layoutHistory.push({view:active,before:current.map(m=>({id:m.id,rect:layoutRect(m)})),pages:[...(store.prefs.pages[active]||[1])]});
+ if(layoutHistory.length>30)layoutHistory.shift();
+ for(const [id,rect] of final){const m=moduleById(id);if(!m)continue;for(const [key,val] of Object.entries(rect))setField(m,key,val)}
+ store.prefs.pages[active]=[...new Set([...store.prefs.pages[active],...[...final.values()].map(x=>x.page)])].sort((a,b)=>a-b);
+ scheduleSave();if(notify&&overlaps.length)showToast('Sections automatically rearranged. Undo is available.');
+ return true;
+}
+function undoLayout(){while(layoutHistory.length){const change=layoutHistory.pop();if(change.view!==active)continue;for(const item of change.before){const m=moduleById(item.id);if(m)for(const [key,value] of Object.entries(item.rect))setField(m,key,value)}store.prefs.pages[active]=change.pages;scheduleSave();render();showToast('Last layout change undone');return}showToast('Nothing to undo on this page')}
+function renderDesigner(root){const tip=document.createElement('div');tip.className='notice ok';tip.innerHTML='<b>Full layout designer:</b> tap a section to select it, drag onto another to swap or rearrange, or drag its blue bottom-right handle to resize; neighbouring sections reflow automatically. On your phone, the numeric controls below also work without precise finger movements. Changes appear on both devices after a .txt merge.';root.append(tip);const shell=document.createElement('div');shell.className='layout-shell';const left=document.createElement('div');const stack=document.createElement('div');stack.className='paper-stack';left.append(stack);const tools=document.createElement('div');tools.className='page-tools';tools.style.marginTop='12px';tools.innerHTML='<button class="button" id="layout-add-page">＋ Add A4 page</button><button class="button" id="layout-add-section">＋ New section</button><button class="button" id="layout-undo">↶ Undo layout change</button><button class="button" id="layout-reset">Reset this view layout</button>';left.append(tools);const aside=document.createElement('aside');aside.className='layout-aside';aside.id='layout-aside';shell.append(left,aside);root.append(shell);const pages=(store.prefs.pages[active]||[1]).slice().sort((a,b)=>a-b);for(const page of pages){const wrapper=document.createElement('div');wrapper.className='paper-holder';const label=document.createElement('div');label.className='page-label';label.textContent='Page '+page+' · A4 portrait';if(page>1){const hide=document.createElement('button');hide.className='button small';hide.textContent='Hide page '+page;hide.style.marginLeft='12px';hide.onclick=()=>{store.prefs.pages[active]=store.prefs.pages[active].filter(p=>p!==page);scheduleSave();render();showToast('Page hidden. Its sections and data are preserved.')};label.append(hide)}wrapper.append(label);const frame=makePaper(active,page,`Page ${page}`,true);wrapper.append(frame);const all=modulesFor(active,page);for(const mod of all){const box=makePaperBox(mod,true);const body=box.querySelector('.box-text');fillPaperModule(body,mod,active,[],false);frame.querySelector('.paper-canvas').append(box);attachDrag(box,mod,frame)}stack.append(wrapper)}rescalePapers(stack);requestAnimationFrame(()=>rescalePapers(stack));
+ tools.querySelector('#layout-add-page').onclick=()=>{const pages=store.prefs.pages[active];let next=2;while(pages.includes(next))next++;if(next>50){showToast('Maximum of 50 pages');return}pages.push(next);scheduleSave();render();showToast(`Page ${next} added`)};tools.querySelector('#layout-add-section').onclick=addSectionDialog;tools.querySelector('#layout-undo').onclick=undoLayout;tools.querySelector('#layout-reset').onclick=()=>confirmAction('Reset view layout?',`Restore the original ${active} arrangement? Existing tasks and notes will remain unchanged. Custom sections will be hidden.`,()=>{const ids=new Set(DEFAULT_MODULES[active].map(a=>a[0]));for(const mod of items('module').filter(m=>g(m,'view')===active)){if(!ids.has(mod.id))setField(mod,'hidden',true);else{const a=DEFAULT_MODULES[active].find(s=>s[0]===mod.id);for(const [key,val] of Object.entries({title:a[1],type:a[2],x:a[3],y:a[4],w:a[5],h:a[6],page:a[7],hidden:false}))setField(mod,key,val)}}store.prefs.pages[active]=[1];scheduleSave();render()},'Reset layout');renderInspector(aside);}
+function renderInspector(aside){aside.innerHTML='';const panel=document.createElement('section');panel.className='panel';panel.innerHTML='<h3>Sections & page layout</h3><p>Choose a section to adjust its title, size, position and page.</p>';const list=document.createElement('div');list.className='module-list';for(const mod of items('module').filter(m=>g(m,'view')===active)){const btn=document.createElement('button');btn.setAttribute('aria-pressed',mod.id===selectedModule?'true':'false');btn.innerHTML=`<span>${g(mod,'hidden')?'○':'▣'} ${esc(g(mod,'title'))}</span><small>P${g(mod,'page')}</small>`;btn.onclick=()=>{selectedModule=mod.id;render()};list.append(btn)}panel.append(list);aside.append(panel);const mod=moduleById(selectedModule);if(mod&&!store.prefs.pages[active].includes(g(mod,'page'))){const reveal=document.createElement('button');reveal.className='button small';reveal.textContent=`Show page ${g(mod,'page')}`;reveal.onclick=()=>{store.prefs.pages[active].push(g(mod,'page'));store.prefs.pages[active].sort((a,b)=>a-b);scheduleSave();render()};panel.append(reveal)}if(!mod||g(mod,'view')!==active){const message=document.createElement('section');message.className='panel';message.innerHTML='<h3>Edit a section</h3><p>Select a box on the sheet or choose one from the section list.</p>';aside.append(message);return}const editor=document.createElement('section');editor.className='panel';const r=layoutRect(mod);editor.innerHTML=`<h3>Selected section</h3><div class="field"><label for="mod-title">Heading</label><input id="mod-title" maxlength="80" value="${esc(g(mod,'title'))}"></div><div class="field"><label for="mod-type">Content type</label><select id="mod-type">${Object.entries(typeNames).map(([value,name])=>`<option value="${value}" ${g(mod,'type')===value?'selected':''}>${esc(name)}</option>`).join('')}</select></div><div class="field"><label for="mod-page">A4 page</label><select id="mod-page">${(store.prefs.pages[active]||[1]).map(p=>`<option value="${p}" ${p===r.page?'selected':''}>Page ${p}</option>`).join('')}</select></div><div class="field-row"><div class="field"><label for="mod-x">Left · 0–11</label><input id="mod-x" type="number" inputmode="numeric" min="0" max="11" value="${r.x}"></div><div class="field"><label for="mod-y">Top · 0–23</label><input id="mod-y" type="number" inputmode="numeric" min="0" max="23" value="${r.y}"></div><div class="field"><label for="mod-w">Width · 2–12</label><input id="mod-w" type="number" inputmode="numeric" min="2" max="12" value="${r.w}"></div><div class="field"><label for="mod-h">Height · 2–24</label><input id="mod-h" type="number" inputmode="numeric" min="2" max="24" value="${r.h}"></div></div><div class="page-tools" style="margin-top:8px"><button class="button small" id="mod-apply">Apply changes</button><button class="button small" id="mod-hide">${g(mod,'hidden')?'Show':'Hide'} section</button></div><p style="margin-top:10px">Hidden sections keep their tasks and notes. Change the section type only if you intend to use a different kind of data.</p>`;editor.querySelector('#mod-apply').onclick=()=>{const next={x:+editor.querySelector('#mod-x').value,y:+editor.querySelector('#mod-y').value,w:+editor.querySelector('#mod-w').value,h:+editor.querySelector('#mod-h').value,page:+editor.querySelector('#mod-page').value};if(Object.values(next).some(v=>!Number.isFinite(v))){showToast('Enter valid numbers');return}if(updateRect(mod,next)){setField(mod,'title',editor.querySelector('#mod-title').value.trim()||'Untitled section');setField(mod,'type',editor.querySelector('#mod-type').value);render();showToast('Layout updated')}};editor.querySelector('#mod-hide').onclick=()=>{setField(mod,'hidden',!g(mod,'hidden',false));render()};aside.append(editor)}
+function attachDrag(box,mod,frame){box.addEventListener('pointerdown',e=>{if(e.button!==0&&e.pointerType==='mouse')return;if(e.target.closest('.box-text')&&e.pointerType==='mouse'&&e.detail===2)return;e.preventDefault();const resize=Boolean(e.target.closest('.handle'));if(selectedModule!==mod.id){selectedModule=mod.id;frame.closest('.paper-stack').querySelectorAll('.paper-box').forEach(b=>b.classList.toggle('selected',b.dataset.id===mod.id));renderInspector(document.getElementById('layout-aside'))}let orig=layoutRect(mod),rect={...orig},startX=e.clientX,startY=e.clientY;const canvas=frame.querySelector('.paper-canvas');const bounds=canvas.getBoundingClientRect();box.setPointerCapture(e.pointerId);box.classList.add('dragging');const move=ev=>{const dx=Math.round((ev.clientX-startX)/bounds.width*TOTAL_COLS),dy=Math.round((ev.clientY-startY)/bounds.height*TOTAL_ROWS);rect=resize?{...orig,w:clamp(orig.w+dx,2,TOTAL_COLS-orig.x),h:clamp(orig.h+dy,2,TOTAL_ROWS-orig.y)}:{...orig,x:clamp(orig.x+dx,0,TOTAL_COLS-orig.w),y:clamp(orig.y+dy,0,TOTAL_ROWS-orig.h)};box.style.left=(rect.x/TOTAL_COLS*100)+'%';box.style.top=(rect.y/TOTAL_ROWS*100)+'%';box.style.width=(rect.w/TOTAL_COLS*100)+'%';box.style.height=(rect.h/TOTAL_ROWS*100)+'%'};const finish=()=>{box.removeEventListener('pointermove',move);box.removeEventListener('pointerup',finish);box.removeEventListener('pointercancel',cancel);box.classList.remove('dragging');if(JSON.stringify(rect)!==JSON.stringify(orig))updateRect(mod,rect);render()};const cancel=()=>{box.removeEventListener('pointermove',move);box.removeEventListener('pointerup',finish);box.removeEventListener('pointercancel',cancel);render()};box.addEventListener('pointermove',move);box.addEventListener('pointerup',finish);box.addEventListener('pointercancel',cancel)})}
+function addSectionDialog(){const dlg=modal('Add a planner section',`<p>Create a task list or notes box, then arrange it in Edit layout. New sections never overwrite existing ones.</p><div class="field"><label for="new-title">Section title</label><input id="new-title" value="My section" maxlength="80"></div><div class="field"><label for="new-type">Section type</label><select id="new-type"><option value="tasks">Task list</option><option value="notes">Notes / scratchpad</option></select></div><div class="field"><label for="new-page">Page</label><select id="new-page">${(store.prefs.pages[active]||[1]).map(p=>`<option value="${p}">Page ${p}</option>`).join('')}</select></div>`,[{label:'Cancel',run:close=>close()},{label:'Add section',css:'blue',run:close=>{const title=document.querySelector('#new-title').value.trim();if(!title){showToast('Enter a section heading');return}let page=+document.querySelector('#new-page').value;let x=-1,y=-1;outer:for(let height of [6,4,3]){for(let yy=0;yy<=TOTAL_ROWS-height;yy++){for(let xx=0;xx<=6;xx++){const r={x:xx,y:yy,w:6,h:height,page};if(!collides('',r)){x=xx;y=yy;break outer}}}}if(x===-1){page=Math.max(...store.prefs.pages[active])+1;store.prefs.pages[active].push(page);x=0;y=0}const m=createRecord('module',{view:active,title,type:document.querySelector('#new-type').value,x,y,w:6,h:6,page,hidden:false});selectedModule=m.id;scheduleSave();close();mode='layout';render();showToast('Section added. Drag or resize it on the sheet.')}}])}
+/* A4 paper generation: measure each visible box at actual paper size and flow excess onto continuation sheets. */
+function makePaper(view,page,title,design=false){const frame=document.createElement('div');frame.className='paper-frame';const sheet=document.createElement('div');sheet.className='paper'+(design?' designing dragging':'');sheet.innerHTML=`<div class="paper-shell"><div class="paper-heading"><strong>${esc(VIEW_NAMES[view])}</strong><span>${esc(view==='daily'?readableDate(focusDates.daily,{weekday:'long',day:'numeric',month:'long',year:'numeric'}):view==='weekly'?`Week commencing ${readableDate(focusDates.weekly)}`:view==='monthly'?focusDates.monthly:'Tasks & ideas')} · ${esc(title)}</span></div><div class="paper-canvas"></div></div><div class="page-number">${esc(VIEW_NAMES[view])} · ${page}</div>`;frame.append(sheet);return frame}
+function makePaperBox(mod,design=false){const box=document.createElement('div');box.className='paper-box'+(mod.id===selectedModule&&design?' selected':'');box.dataset.id=mod.id;const r=layoutRect(mod);box.style.left=r.x/TOTAL_COLS*100+'%';box.style.top=r.y/TOTAL_ROWS*100+'%';box.style.width=r.w/TOTAL_COLS*100+'%';box.style.height=r.h/TOTAL_ROWS*100+'%';const head=document.createElement('div');head.className='box-label';head.textContent=g(mod,'title');const body=document.createElement('div');body.className='box-text';box.append(head,body);if(design){const handle=document.createElement('div');handle.className='handle';handle.setAttribute('aria-label','Resize section');handle.textContent='↘';box.append(handle)}return box}
+function paperTaskNode(item){
+ const row=document.createElement('div');row.className='paper-line'+(item.done?' done':'')+(item.kind==='subtask'?' subtask-print':'')+(item.kind==='task'?' '+(item.priority||'normal'):'')+(item.overdue?' overdue':'')+(item.soon&&!item.overdue?' soon':'');
+ const ch=document.createElement('span');ch.className='paper-check'+(item.done?' checked':'');const text=document.createElement('span');text.className='line-body';
+ if(item.kind==='task'){
+   if(item.overdue&&!item.done){const flag=document.createElement('strong');flag.className='line-flag overdue';flag.textContent='⚠ OVERDUE · ';text.append(flag)}
+   else if(item.soon&&!item.done){const flag=document.createElement('strong');flag.className='line-flag soon';flag.textContent='◷ '+(item.date===focusDates.daily?'DUE TODAY':'DUE SOON')+' · ';text.append(flag)}
+   const flag=document.createElement('strong');flag.className='line-flag '+(item.priority||'normal');
+   flag.textContent=item.priority==='high'?'★ HIGH · ':item.priority==='low'?'↓ LOW PRIORITY · ':'NORMAL · ';
+   text.append(flag);
+   if(item.energy==='low'||item.energy==='high'){const energyFlag=document.createElement('strong');energyFlag.className='line-flag energy';energyFlag.textContent=item.energy==='low'?'LOW ENERGY · ':'HIGH ENERGY · ';text.append(energyFlag)}
+ }
+ text.append(document.createTextNode((item.date?readableDate(item.date,{day:'numeric',month:'short'})+' · ':(item.kind==='task'?'ANYTIME · ':''))+(item.category?item.category+' · ':'')+(item.text||'')));
+ row.append(ch,text);return row;
+}
+function printableItems(mod,view){
+ const type=g(mod,'type'),scope=scopeFor(view,mod.id);
+ if(type==='notes')return [{kind:'note',text:getNote(mod.id,scope)}];
+ const out=[];
+ const appendTask=(entry,showDate)=>{const t=entry.task,done=doneFor(t,entry.day);if(!store.prefs.showDone&&done)return;out.push({kind:'task',text:g(t,'text'),done,priority:g(t,'priority','normal'),energy:taskEnergy(t),soon:dueSoon(entry,view==='daily'?focusDates.daily:isoDate()),overdue:entryOverdue(entry,view==='daily'?focusDates.daily:isoDate()),date:entryDate(entry)||null,category:showDate?classifyTask(t):null});for(const step of subtasksFor(t)){const stepDone=subtaskDone(step,t,entry.day);if(store.prefs.showDone||!stepDone)out.push({kind:'subtask',text:g(step,'text'),done:stepDone})}};
+ if(type==='weekdays'){for(let i=0;i<7;i++){const date=addDays(focusDates.weekly,i);out.push({kind:'heading',text:readableDate(date,{weekday:'long',day:'numeric',month:'short'})});for(const entry of sortedForPrint(datedTasksOn(date),view))appendTask(entry,false)}return out}
+ if(view==='daily'&&type==='tasks'){
+   const entries=visibleTaskEntries(tasksShown(mod,view,scope),view);
+   const groups=groupedDailyEntries(entries,currentPrintSort()==='manual'?'manual':'due');
+   for(const group of groups)if(group.entries.length){out.push({kind:'group',key:group.key,text:group.label+' ('+group.entries.length+')'});for(const entry of group.entries)appendTask(entry,!!entry.overdue)}
+ }else for(const entry of sortedForPrint(tasksShown(mod,view,scope),view))appendTask(entry,view==='monthly'||type==='radar'||(view==='daily'&&!!entry.overdue));
+ return out;
+}
+function paperEntryNode(item){if(item.kind==='task'||item.kind==='subtask')return paperTaskNode(item);const d=document.createElement('div');if(item.kind==='group'){d.className='paper-group-name '+item.key;d.textContent=item.text}else if(item.kind==='heading'){d.className='paper-dayname';d.textContent=item.text}else if(item.kind==='note'){d.className='paper-note';d.textContent=item.text}else{d.className='paper-blank'}return d}
+function splitNoteFitting(body,text){const node=document.createElement('div');node.className='paper-note';body.append(node);let lo=0,hi=text.length,found=0;while(lo<=hi){const mid=Math.floor((lo+hi)/2);node.textContent=text.slice(0,mid);if(body.scrollHeight<=body.clientHeight+1){found=mid;lo=mid+1}else hi=mid-1}if(found<text.length&&found>50){const slice=text.slice(0,found);const last=Math.max(slice.lastIndexOf('\n'),slice.lastIndexOf(' '));if(last>found*.7)found=last+1}node.textContent=text.slice(0,found);if(found===0)node.remove();return found}
+function fillBlankRules(body,max=100){if(!store.prefs.showRules)return;for(let i=0;i<max;i++){const line=paperEntryNode({kind:'blank'});body.append(line);if(body.scrollHeight>body.clientHeight+1){line.remove();break}}}
+function fillPaperModule(body,mod,view,excess,measure=true){const items=printableItems(mod,view);if(items.length===1&&items[0].kind==='note'&&!items[0].text){if(measure)fillBlankRules(body);else if(store.prefs.showRules){for(let i=0;i<5;i++)body.append(paperEntryNode({kind:'blank'}))}return}
+ if(!items.length){if(measure)fillBlankRules(body);else if(store.prefs.showRules){for(let i=0;i<5;i++)body.append(paperEntryNode({kind:'blank'}))}return}
+ for(let i=0;i<items.length;i++){const ent=items[i];let el=paperEntryNode(ent);body.append(el);if(measure&&body.scrollHeight>body.clientHeight+1){el.remove();if(ent.kind==='note'){const fits=splitNoteFitting(body,ent.text);if(fits<ent.text.length)excess.push({kind:'note',text:ent.text.slice(fits)});}else excess.push(ent);for(let j=i+1;j<items.length;j++)excess.push(items[j]);break}}if(measure&&g(mod,'type')!=='notes')fillBlankRules(body)}
+
+function printableCalendarPage(){const frame=makePaper('monthly','Calendar','Month at a glance',false),canvas=frame.querySelector('.paper-canvas');canvas.style.cssText='display:block;overflow:hidden';const d=document.createElement('div');d.className='print-calendar';const y=+focusDates.monthly.slice(0,4),m=+focusDates.monthly.slice(5,7);const heading=document.createElement('h3');heading.textContent=new Date(y,m-1,1).toLocaleDateString('en-GB',{month:'long',year:'numeric'});d.append(heading);const legend=document.createElement('div');legend.className='print-calendar-legend';legend.textContent='H = High priority · N = Normal priority · L = Low priority · ⚡ = Low energy · Red edge = Overdue';d.append(legend);const grid=document.createElement('div');grid.className='print-calendar-grid';for(const name of ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']){const h=document.createElement('div');h.className='print-calendar-weekday';h.textContent=name;grid.append(h)}const first=focusDates.monthly+'-01',offset=(parseDate(first).getDay()+6)%7,start=addDays(first,-offset),len=new Date(y,m,0).getDate(),num=Math.ceil((offset+len)/7)*7;grid.style.gridTemplateRows='25px repeat('+num/7+',1fr)';for(let i=0;i<num;i++){const date=addDays(start,i),cell=document.createElement('div');cell.className='print-calendar-day'+(monthOf(date)!==focusDates.monthly?' other':'');const number=document.createElement('strong');number.textContent=String(parseDate(date).getDate());cell.append(number);for(const task of sortedForPrint(datedTasksOn(date),'monthly').map(e=>e.task).slice(0,5)){const el=document.createElement('div');el.className='print-calendar-entry'+(doneFor(task,g(task,'recurrence','none')==='none'?null:date)?' completed':'')+(g(task,'priority','normal')==='high'?' high':g(task,'priority','normal')==='low'?' low':'')+(!doneFor(task,g(task,'recurrence','none')==='none'?null:date)&&date<isoDate()?' overdue':'');el.textContent=(g(task,'priority','normal')==='high'?'H· ':g(task,'priority','normal')==='low'?'L· ':'N· ')+(taskEnergy(task)==='low'?'⚡ ':'')+g(task,'text','').slice(0,64);cell.append(el)}const remainder=calendarEntriesOn(date).length-5;if(remainder>0){const more=document.createElement('small');more.textContent='+'+remainder+' more';cell.append(more)}grid.append(cell)}d.append(grid);canvas.append(d);return frame}
+
+function buildPaperSet(view,{design=false,measure=true,host=null}={}){const root=document.createElement('div');root.className='paper-stack';if(host)host.append(root);if(view==='monthly'&&store.prefs.showCalendar!==false&&!design){root.append(printableCalendarPage())}const pages=(store.prefs.pages[view]||[1]).slice().sort((a,b)=>a-b);let overflow=[];for(const page of pages){const frame=makePaper(view,page,'Page '+page,design);const canvas=frame.querySelector('.paper-canvas');root.append(frame);for(const mod of modulesFor(view,page)){const box=makePaperBox(mod,design);canvas.append(box);const list=[];fillPaperModule(box.querySelector('.box-text'),mod,view,list,measure);if(list.length)overflow.push({title:g(mod,'title'),source:mod.id,entries:list})}}
+ if(measure&&!design&&overflow.length){let seqNum=Math.max(...pages);for(const group of overflow){let remaining=group.entries.slice();while(remaining.length){seqNum++;const frame=makePaper(view,seqNum,group.title+' · continued',false);const fake={id:'continuation',fields:{}};for(const [k,v] of Object.entries({x:0,y:0,w:12,h:24,title:group.title+' (continued)'}))fake.fields[k]={value:v};const box=makePaperBox(fake);frame.querySelector('.paper-canvas').append(box);const body=box.querySelector('.box-text');root.append(frame);let consumed=0;for(const ent of remaining){if(ent.kind==='note'){const taken=splitNoteFitting(body,ent.text);if(taken===0)break;if(taken<ent.text.length){remaining[consumed]={kind:'note',text:ent.text.slice(taken)};break}consumed++;continue}const el=paperEntryNode(ent);body.append(el);if(body.scrollHeight>body.clientHeight+1){el.remove();break}consumed++}remaining.splice(0,consumed);if(consumed===0&&remaining.length&&remaining[0].kind!=='note'){// Very long single task: force an entry so that the continuation cannot loop indefinitely.
+ const ent=remaining.shift();body.append(paperEntryNode(ent));}
+ if(consumed===0&&remaining.length&&remaining[0].kind==='note'){// A zero-height box is not expected, but guard against an infinite loop.
+ const t=remaining[0].text;remaining[0].text=t.slice(Math.min(300,t.length));if(!remaining[0].text)remaining.shift();}
+ }}}return root}
+function rescalePapers(parent){if(!parent)return;const width=parent.getBoundingClientRect().width||document.documentElement.clientWidth-25;const scale=Math.min(1,Math.max(.22,(width-2)/794));parent.querySelectorAll('.paper-frame').forEach(f=>{f.style.width=(794*scale)+'px';f.style.height=(1123*scale)+'px';f.querySelector('.paper').style.transform=`scale(${scale})`;f.querySelector('.paper').style.setProperty('--paper-scale',scale)})}
+function previewDialog(){const options=[['focus','Focus: overdue → priority → due date'],['priority','Priority: high first'],['due','Due date: earliest first'],['manual','Manual task order'],['plan','Match Plan sorting']];const dlg=modal('A4 print preview',`<div class="print-controls"><button class="button blue" id="print-active">Print ${VIEW_NAMES[active]}</button><button class="button" id="print-all">Print all five views</button></div><label class="print-sort-label" for="print-sort">Print task order <select id="print-sort">${options.map(([key,label])=>`<option value="${key}" ${store.prefs.printSortMode===key?'selected':''}>${label}</option>`).join('')}</select></label><p class="backup-info" style="margin:10px 0">Extra content automatically goes onto continuation pages. The selected print sorting is used for each task list, including weekly days. Choose A4, scale 100% and background graphics.</p><div id="preview-pages" class="print-preview"></div>`);const el=dlg.body.querySelector('#preview-pages');const redraw=()=>{el.innerHTML='';const holder=document.createElement('div');holder.style.width='100%';holder.append(buildMeasuredPaperSet(active));el.append(holder);requestAnimationFrame(()=>rescalePapers(holder))};dlg.body.querySelector('#print-sort').onchange=e=>{store.prefs.printSortMode=e.target.value;scheduleSave();redraw()};redraw();dlg.body.querySelector('#print-active').onclick=()=>printViews([active]);dlg.body.querySelector('#print-all').onclick=()=>printViews(Object.keys(VIEW_NAMES))}
+function buildMeasuredPaperSet(view){const stage=document.createElement('div');stage.style.cssText='position:fixed;visibility:hidden;left:-20000px;top:0;width:794px;z-index:-1';document.body.append(stage);let result;try{result=buildPaperSet(view,{host:stage})}finally{stage.remove()}return result}
+function printViews(views){const root=document.getElementById('print-root');root.innerHTML='';for(const view of views){root.append(buildMeasuredPaperSet(view))}window.print()}
+/* Portable export, validation, deep merge and explicit conflict review. */
+/* Base64 transfer wrapper: obfuscation only, NOT encryption. No password needed. */
+const TRANSFER_BASE64_HEADER='WLP-BASE64-V1';
+function encodeTransferText(json){
+ const bytes=new TextEncoder().encode(json);
+ const chunks=[];
+ for(let i=0;i<bytes.length;i+=16384){chunks.push(String.fromCharCode(...bytes.subarray(i,i+16384)))}
+ const base64=btoa(chunks.join(''));
+ const wrapped=base64.match(/.{1,120}/g)?.join('\n')||'';
+ return TRANSFER_BASE64_HEADER+'\n'+wrapped+'\n';
+}
+function decodeTransferText(text){
+ const trimmed=text.replace(/^\uFEFF/,'').trim();
+ if(!trimmed.startsWith(TRANSFER_BASE64_HEADER))return trimmed; // Earlier plain-JSON backups still work.
+ const match=/^WLP-BASE64-V1\s+([\s\S]*)$/.exec(trimmed);
+ if(!match)throw Error('Invalid encoded planner backup header');
+ const base64=match[1].replace(/\s/g,'');
+ if(base64.length>42_000_000)throw Error('Encoded backup exceeds the safe import limit');
+ if(base64.length%4!==0||!/^[A-Za-z0-9+/]*={0,2}$/.test(base64))throw Error('Invalid Base64 data in backup');
+ let binary;
+ try{binary=atob(base64)}catch(e){throw Error('Backup Base64 data is damaged or incomplete')}
+ const bytes=new Uint8Array(binary.length);
+ for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+ try{return new TextDecoder('utf-8',{fatal:true}).decode(bytes)}catch(e){throw Error('Backup text is damaged or is not valid UTF-8')}
+}
+function exportFilename(){
+ const bytes=new Uint8Array(3);
+ if(globalThis.crypto?.getRandomValues){globalThis.crypto.getRandomValues(bytes)}
+ else for(let i=0;i<bytes.length;i++)bytes[i]=Math.floor(Math.random()*256);
+ const suffix=Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');
+ return `offline_planner_${isoDate()}-${suffix}.txt`;
+}
+function exportFile(){persist();const json=JSON.stringify({format:'work-life-planner-transfer',schema:1,exportedAt:now(),sourceDevice:deviceId,records:store.records,prefs:store.prefs});const output=encodeTransferText(json);downloadText(output,exportFilename());showToast('Base64 .txt exported · setup + all data')}
+function downloadText(text,filename){const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000)}
+function readTransfer(text){if(text.length>42_000_000)throw Error('File exceeds safe import limit');const decoded=decodeTransferText(text);if(decoded.length>30_000_000)throw Error('Decoded backup exceeds 30 MB safe import limit');let parsed;try{parsed=JSON.parse(decoded)}catch(e){throw Error('This is not a valid planner backup (encoded .txt or earlier JSON)')}if(parsed?.format==='work-life-planner-transfer'&&parsed.schema===1){if(!parsed.records||typeof parsed.records!=='object'||Array.isArray(parsed.records)||Object.keys(parsed.records).length>50000)throw Error('Invalid or excessively large record collection');for(const [id,record] of Object.entries(parsed.records)){if(id==='__proto__'||id==='constructor'||id==='prototype'||!record||!['module','task','note','occurrence','settings','subtask','suboccurrence'].includes(record.kind)||!record.fields||typeof record.fields!=='object')throw Error('Invalid record in backup');for(const v of Object.values(record.fields)){if(!v||typeof v.rev!=='string'||!Array.isArray(v.anc)||!('value'in v)||v.anc.length>400)throw Error('Invalid field revision in backup')}}return {kind:'transfer',data:parsed}}
+ if(parsed?.inputs&&parsed?.checks&&parsed?.p2Visible)return {kind:'legacy',data:parsed};throw Error('Unrecognised backup. Expected a Base64 .txt export, an earlier plain-JSON transfer, or original V4 JSON backup.')}
+function newImportStats(mode){return {mode,at:now(),added:{task:0,subtask:0,module:0,note:0,other:0},updated:{task:0,subtask:0,module:0,note:0,other:0},unchanged:0,conflictRecords:0,conflictFields:0,resolved:0}}
+function importKind(kind){return ['task','subtask','module','note'].includes(kind)?kind:'other'}
+function countImportKind(target,kind){const key=importKind(kind);target[key]=(target[key]||0)+1}
+function saveImportReport(report){lastImportSummary=report;store.prefs.lastImportSummary=report;scheduleSave()}
+function importReportText(report){if(!report)return '';const label={task:'tasks',subtask:'subtasks',module:'layouts',note:'notes',other:'other records'};const rows=['task','subtask','module','note','other'].map(k=>`${label[k]}: ${report.added?.[k]||0} added / ${report.updated?.[k]||0} updated`);return (report.mode==='replace'?'Full restore':'Merge')+' · '+report.at+'\n'+rows.join('\n')+'\n'+report.unchanged+' unchanged, '+report.conflictRecords+' conflicting records ('+report.conflictFields+' fields), '+report.resolved+' resolved fields'}
+function showImportReport(){if(!lastImportSummary){showToast('No import results available yet');return}const content=document.createElement('div');content.className='import-summary';const pre=document.createElement('pre');pre.style.cssText='white-space:pre-wrap;line-height:1.65;font:inherit';pre.textContent=importReportText(lastImportSummary);content.append(pre);const dlg=modal('Last import results','',[{label:'Close',css:'blue',run:close=>close()}]);dlg.body.append(content)}
+function loadImport(event){const f=event.target.files?.[0];event.target.value='';if(!f)return;const fr=new FileReader();fr.onload=()=>{try{const obj=readTransfer(String(fr.result));if(obj.kind==='legacy')return legacyImportDialog(obj.data);const d=obj.data;const stats=Object.values(d.records).reduce((o,r)=>(o[r.kind]=(o[r.kind]||0)+1,o),{});modal('Import planner transfer',`<p>This text file contains <b>${stats.task||0} tasks</b>, <b>${stats.subtask||0} subtasks</b>, <b>${stats.note||0} note records</b> and <b>${stats.module||0} section layouts</b>.</p><p class="backup-info">Exported: ${esc(d.exportedAt||'Unknown')}<br>Device: ${esc(d.sourceDevice||'Unknown')}</p><div class="notice ok">Recommended: <b>Merge</b> preserves entries from both devices and asks you to review simultaneous edits of the same field. A full replace discards any current local records not present in this file.</div>`,[{label:'Cancel',run:close=>close()},{label:'Merge changes',css:'blue',run:close=>{close();mergeTransfer(d)}},{label:'Replace local data…',run:close=>{close();confirmAction('Replace ALL local data?',`This will discard local entries that are not included in the imported file. Export the current planner first if you might need them.`,()=>replaceTransfer(d),'Replace everything')}}])}catch(err){modal('Import failed',`<p>${esc(err.message)}</p><p class="backup-info">No local data was changed.</p>`,[{label:'Close',run:c=>c()}])}};fr.readAsText(f)}
+function isAncestor(maybeAncestor,latest){return latest.rev===maybeAncestor.rev||(latest.anc||[]).includes(maybeAncestor.rev)}
+function mergeTransfer(transfer){if(storageRecoveryRequired&&!preserveDamagedDataForRestore())return;if(conflicts.length){showToast('Resolve existing merge conflicts before importing again');reviewConflicts();return}const incoming=transfer.records;const next=deepClone(store.records);const issues=[];const report=newImportStats('merge'),updatedRecords=new Set(),conflictRecords=new Set();let added=0,updated=0;for(const [id,remote] of Object.entries(incoming)){const local=next[id];if(!local){next[id]=deepClone(remote);added++;countImportKind(report.added,remote.kind);continue}if(local.kind!==remote.kind){issues.push({id,field:'kind',local:{value:local.kind,rev:'local',anc:[]},remote:{value:remote.kind,rev:'remote',anc:[]}});conflictRecords.add(id);continue}for(const [key,r] of Object.entries(remote.fields||{})){const l=local.fields[key];if(!l){local.fields[key]=deepClone(r);updated++;updatedRecords.add(id);continue}if(l.rev===r.rev)continue;if(isAncestor(l,r)){local.fields[key]=deepClone(r);updated++;updatedRecords.add(id);continue}if(isAncestor(r,l))continue;if(JSON.stringify(l.value)===JSON.stringify(r.value)){local.fields[key]={...l,anc:[...new Set([...l.anc,r.rev,...r.anc])].slice(0,240)};continue}issues.push({id,field:key,local:deepClone(l),remote:deepClone(r)});conflictRecords.add(id)}}
+ for(const id of updatedRecords)countImportKind(report.updated,next[id]?.kind);
+ report.conflictRecords=conflictRecords.size;report.conflictFields=issues.length;
+ report.unchanged=Object.keys(incoming).filter(id=>store.records[id]&&!updatedRecords.has(id)&&!conflictRecords.has(id)).length;
+ store.records=next;store.pendingConflicts=issues;for(const [view,pages] of Object.entries(transfer.prefs?.pages||{})){if(VIEW_NAMES[view]&&Array.isArray(pages))store.prefs.pages[view]=[...new Set([...(store.prefs.pages[view]||[1]),...pages.filter(p=>Number.isInteger(p)&&p>0&&p<=50)])].sort((a,b)=>a-b)} // Visible layout pages are unioned. Other preferences remain local.
+ ensureDefaultModules();ensureSharedSettings();if(!issues.length)consolidateOldCarriedTasks();saveImportReport(report);persist();conflicts=issues;unresolvedCount=issues.length;render();if(issues.length){showToast(`Merged ${added} new record(s); ${issues.length} conflict(s) need review`);reviewConflicts()}else {showImportReport();showToast(`Merge completed · ${added} new record(s), ${updated} field update(s)`)} }
+function replaceTransfer(transfer){if(storageRecoveryRequired&&!preserveDamagedDataForRestore())return;const rollback=deepClone(store);try{store.records=deepClone(transfer.records);store.prefs={...newStore().prefs,...deepClone(transfer.prefs||{})};store.prefs.pages={...deepClone(PAGE_ACTIVE_DEFAULT),...(store.prefs.pages||{})};ensureDefaultModules();ensureSharedSettings();consolidateOldCarriedTasks();persist();if(!storageOkay)throw Error('Unable to write local storage');conflicts=[];unresolvedCount=0;store.pendingConflicts=[];const report=newImportStats('replace');
+ for(const record of Object.values(transfer.records))countImportKind(report.added,record.kind);
+ saveImportReport(report);persist();render();showImportReport();showToast('Local planner replaced with imported backup')}catch(e){store=rollback;persist();modal('Restore failed',`<p>${esc(e.message)}</p>`,[{label:'Close',run:c=>c()}])}}
+function resolveConflict(issue,useRemote){const obj=store.records[issue.id];if(!obj)return;if(issue.field==='kind'){if(useRemote)obj.kind=issue.remote.value;return}const chosen=useRemote?issue.remote:issue.local,other=useRemote?issue.local:issue.remote;const union=[chosen.rev,...chosen.anc,other.rev,...other.anc];obj.fields[issue.field]={value:deepClone(chosen.value),rev:`${deviceId}:${++seq}:${Date.now()}`,anc:[...new Set(union)].slice(0,240)};scheduleSave()}
+function reviewConflicts(){if(!conflicts.length){unresolvedCount=0;render();return}const m=modal(`Review ${conflicts.length} merge conflict(s)`,`<p class="muted">Both devices changed the same field since their last shared version. Choose which value to retain for each conflict. Other changes have already been merged.</p><div id="conflict-items" class="conflicts-list"></div>`,[{label:'Keep selected values',css:'blue',run:close=>{const choices=Array.from(m.body.querySelectorAll('.conflict-item'));choices.forEach((item,i)=>resolveConflict(conflicts[i],item.querySelector('input[value=remote]').checked));if(lastImportSummary){lastImportSummary.resolved+=conflicts.length;saveImportReport(lastImportSummary)}conflicts=[];unresolvedCount=0;store.pendingConflicts=[];consolidateOldCarriedTasks();syncSharedPrefs();persist();close();render();showImportReport();showToast('Merge conflicts resolved')}}]);const dst=m.body.querySelector('#conflict-items');for(const [i,issue] of conflicts.entries()){const div=document.createElement('div');div.className='conflict-item';const obj=store.records[issue.id];const title=g(obj,'title')||g(obj,'text')||issue.id;div.innerHTML=`<b>${esc(title.slice(0,120))}</b><div class="backup-info">Field: ${esc(issue.field)}</div><div class="conflict-options"><label><input type="radio" name="conflict-${i}" value="local" checked><span><b>Keep this device</b><pre>${esc(JSON.stringify(issue.local.value,null,2).slice(0,1200))}</pre></span></label><label><input type="radio" name="conflict-${i}" value="remote"><span><b>Use imported version</b><pre>${esc(JSON.stringify(issue.remote.value,null,2).slice(0,1200))}</pre></span></label></div>`;dst.append(div)}}
+function helpDialog(){modal("How to use Offline Planner",`<h3>Planning</h3><p>Dated tasks use one shared record across Daily, Weekly and Monthly. Tasks due within seven days are highlighted in Daily as Due soon. Priority and energy requirement are independent. The Anytime tab lists all tasks without deadlines, including Backlog. Use Select tasks to complete, archive, change category, priority, energy or due dates in batches. After importing, view an itemised report of added, updated, unchanged and conflicting records. Choose No due date to keep an anytime task visible on Daily without making it overdue; unscheduled backlog tasks remain in Backlog. Edit, complete, reschedule or archive a task from any view; changes sync across the views; unfinished dated tasks automatically remain visible in Daily on every subsequent day without changing their original due dates. Backlog tasks can be scheduled using the ↗ button. Old Carry Forward copies are consolidated by their recorded source IDs, not by matching task names.</p><h3 style="margin-top:14px">Subtasks / small steps</h3><p>Select <b>＋ Add subtasks</b> beneath any task, then type a step and press Enter or Add step. Tick steps individually, use ↑ and ↓ to reorder, or ✕ to remove one. The progress count is shown everywhere the task appears. Parent completion is independent. Repeating tasks remember completed steps separately for each date. Subtasks are included in printed pages and Base64 transfers.</p><h3 style="margin-top:14px">Editing your A4 layout</h3><p>Choose <b>Edit layout</b>. Select a section, drag it to move it, or use the blue lower-right handle to resize it. On your Pixel, the position and size number fields are easier for precise edits. Add sections and pages whenever needed. Hidden sections keep their content. All changes are included in backups.</p><h3 style="margin-top:14px">Phone ↔ laptop transfers</h3><p>1. Export .txt from the device you just edited. 2. Move the text file to your other device. 3. Import it on the other device and choose <b>Merge changes</b>. 4. Review any conflicting edits. Repeat in the opposite direction when you switch devices. Use Replace only for intentional full restores. Exported .txt files use Base64 text and are decoded automatically on import; this discourages casual reading but is not encryption. Earlier plain-JSON planner backups remain importable.</p><h3 style="margin-top:14px">Installing the HTML</h3><p>The application is a single offline HTML document. It can be renamed to a .txt file for ordinary file transport and renamed back to .html before opening in a compatible browser. Open the renamed HTML file in a compatible browser. The setup/data exports are already .txt, so no renaming is required for those.</p><div class="notice">Keep copies of your exported .txt files. Each browser saves its own data separately, and local browser storage can be cleared.</div>`,[{label:'Close',css:'blue',run:close=>close()}])}
+function resetDialog(factory=false){
+ const required=factory?'RESET':'CLEAR';
+ const heading=factory?'Factory reset planner':'Clear all tasks and notes';
+ const explanation=factory?
+   'Erase all tasks, subtasks, notes, history, custom layouts and preferences on this device. Return to the default blank planner.':
+   'Erase all tasks, subtasks, notes and history on this device, but keep your custom sections, layouts and view settings.';
+ const m=modal(heading,`<p>${esc(explanation)}</p><div class="notice">This does not delete exported backups. Please export a backup first if you might need the information again. This will not automatically clear your other device.</div><div class="field"><label for="reset-confirm">Type <b>${required}</b> to confirm</label><input id="reset-confirm" autocomplete="off" placeholder="${required}"></div>`,[
+  {label:'Cancel',run:close=>close()},
+  {label:'Erase now',css:'blue',run:close=>{
+    if(m.body.querySelector('#reset-confirm').value.trim()!==required){showToast('Type '+required+' exactly to confirm');return}
+    if(storageRecoveryRequired&&!preserveDamagedDataForRestore())return;
+    const previous=deepClone(store);
+    if(factory){store=newStore();ensureDefaultModules();ensureSharedSettings()}
+    else {for(const [id,record] of Object.entries(store.records)){if(['task','subtask','note','occurrence','suboccurrence'].includes(record.kind))delete store.records[id]}}
+    store.pendingConflicts=[];conflicts=[];unresolvedCount=0;collapsedSubtasks.clear();openEmptySubtasks.clear();
+    focusDates={daily:isoDate(),weekly:monday(isoDate()),monthly:monthOf(isoDate())};active='daily';mode='plan';
+    persist();if(!storageOkay){store=previous;persist();showToast('Reset failed: local storage is unavailable');return}
+    close();render();showToast(factory?'Planner restored to factory defaults':'Tasks and notes cleared · layouts kept');
+  }}
+ ]);
+}
+function settingsDialog(){const m=modal('Planner settings',`<div class="settings-grid"><label><input type="checkbox" id="s-done" ${store.prefs.showDone?'checked':''}> Show completed tasks</label><p class="backup-info">Unfinished overdue tasks always remain visible in Daily. Dates never shift automatically.</p><label><input type="checkbox" id="s-rules" ${store.prefs.showRules?'checked':''}> Show handwriting lines in empty print boxes</label></div><hr style="border:0;border-top:1px solid #e1e7ee;margin:17px 0"><h3>Data & device transfer</h3><p class="backup-info">Your changes are saved in this browser's local storage. That storage can be cleared, and different copies or file paths may have separate storage. Export a Base64 .txt file regularly. It is not encrypted, but it is not directly readable as plain JSON. Merge it after moving between devices; never rely on email or local storage as your only backup.</p><p class="backup-info">Offline · no fonts, scripts or tracking loaded from the internet · no account.</p><div class="page-tools" style="margin-top:12px"><button class="button" id="s-export">Export transfer .txt</button><button class="button" id="s-import">Import transfer .txt</button></div><hr style="border:0;border-top:1px solid #e1e7ee;margin:17px 0"><h3>Start fresh / reset</h3><p class="backup-info">These erase local data only. Export a backup before clearing if you may need it later.</p><div class="page-tools"><button class="button" id="s-clear">Clear tasks and notes (keep layout)</button><button class="button" id="s-factory">Factory reset everything</button></div>`,[{label:'Save settings',css:'blue',run:close=>{setPreference('showDone',m.body.querySelector('#s-done').checked);setPreference('showRules',m.body.querySelector('#s-rules').checked);close();render()}}]);m.body.querySelector('#s-export').onclick=exportFile;m.body.querySelector('#s-import').onclick=()=>document.querySelector('#file-import').click();m.body.querySelector('#s-clear').onclick=()=>resetDialog(false);m.body.querySelector('#s-factory').onclick=()=>resetDialog(true)}
+/* Guided V4 migration: recover the original input ordering without trusting mutable DOM positions. */
+function hashLegacy(data){let h=2166136261;const str=JSON.stringify(data);for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)}
+function convertLegacy(src){const v=src.inputs||[],c=src.checks||[];if(v.length<259||c.length<207)throw Error('This V4 backup is missing expected input fields');const extra=v.length-259;const mstart=v.length-64,mcstart=c.length-20;
+ const dated=[];for(let i=0;i<20;i++){const ofs=i<10?mstart+1+i*3:mstart+33+(i-10)*3;dated.push({date:v[ofs]||'',category:['Work','Personal','Appt'].includes(v[ofs+1])?v[ofs+1]:'Work',text:v[ofs+2]||'',done:!!c[mcstart+i],section:i<10?'monthly-radar':'monthly-radar-extra'})}
+ const dailyDate=parseDate(v[0])?v[0]:isoDate();const monthlyCountDate=dated.filter(d=>d.date===dailyDate&&d.text.trim()).length;const expectedDaily=monthlyCountDate||2;let candidate=null;
+ for(let nd=1;nd<=extra-1;nd++){const nw=extra-nd;const weeklyIdx=153+nd;const wk=v[weeklyIdx];if(nd!==expectedDaily||!parseDate(wk)||nw<1)continue;const weekStart=monday(wk);const weekEnd=addDays(weekStart,6);const count=dated.filter(x=>x.date>=weekStart&&x.date<=weekEnd&&x.text.trim()).length;const expectedWeekly=count||2;if(nw===expectedWeekly){candidate={nd,nw,weekStart};break}}
+ if(!candidate)throw Error('Cannot safely reconstruct the V4 field positions. The backup may already contain a shifted or corrupted layout. Import was stopped to avoid misplacing data.');
+ const {nd,nw,weekStart}=candidate;const token=hashLegacy(src);const records={};const mk=(kind,id,values)=>{const fields={};for(const [key,value] of Object.entries(values))fields[key]={value,rev:`legacy:${token}:${id}:${key}`,anc:[]};records[id]={id,kind,fields}};
+ const add=(section,scope,text,done,extraFields={},origIndex=0)=>{if(!String(text||'').trim())return;const id=`legacy-${token}-${section}-${scope}-${origIndex}`;mk('task',id,{section,scope,text:String(text),done:!!done,priority:'normal',due:'',category:'Work',recurrence:'none',startDate:scope.length===10?scope:'',created:now(),order:origIndex,deleted:false,...extraFields})};
+ const note=(section,scope,text)=>{if(text)mk('note',noteId(section,scope),{module:section,scope,text:String(text)})};
+ let ii=0,ci=0;ii++; // Original daily-date.
+ ii+=nd;ci+=nd; // Auto-feeder copies, stored elsewhere in the monthly master.
+ function taskGroup(section,scope,n){for(let i=0;i<n;i++)add(section,scope,v[ii++],c[ci++],{},i)}
+ taskGroup('daily-nonneg',dailyDate,3);taskGroup('daily-work',dailyDate,5);taskGroup('daily-waiting',dailyDate,5);taskGroup('daily-appts',dailyDate,5);taskGroup('daily-personal',dailyDate,5);
+ note('daily-scratch',dailyDate,v[ii++]);
+ // Page 2 work has its own 3-line task entries, mapped into the main Work section.
+ for(let i=0;i<4;i++)add('daily-work',dailyDate,v[ii++],c[ci++],{},5+i);
+ note('daily-work-notes',dailyDate,v[ii++]);taskGroup('daily-personal-extra',dailyDate,6);note('daily-scratch-extra',dailyDate,v[ii++]);
+ for(const [section,n] of [['backlog-work',14],['backlog-home',14],['backlog-tech',14],['backlog-someday',14],['backlog-work-extra',15],['backlog-home-extra',15],['backlog-tech-extra',15],['backlog-someday-extra',15]])taskGroup(section,'all',n);
+ const weeklyInput=v[ii++];if(monday(weeklyInput)!==weekStart)throw Error('Weekly position mismatch: stopped safely');ii+=nw;ci+=nw;
+ for(let day=0;day<6;day++){const taskDate=addDays(weekStart,day);for(let i=0;i<5;i++){const text=v[ii++],checked=c[ci++];add('weekly-days',taskDate,text,checked,{},day*5+i)}}
+ taskGroup('weekly-priorities',weekStart,8);note('weekly-scratch',weekStart,v[ii++]);note('weekly-notes-extra',weekStart,v[ii++]);note('weekly-scratch-extra',weekStart,v[ii++]);
+ const month=/^\d{4}-\d{2}$/.test(v[ii])?v[ii]:monthOf(isoDate());ii++;
+ for(let j=0;j<10;j++){ii+=3;ci++}note('monthly-work-focus',month,v[ii++]);note('monthly-personal-focus',month,v[ii++]);for(let j=10;j<20;j++){ii+=3;ci++}note('monthly-scratch-extra',month,v[ii++]);
+ for(let j=0;j<dated.length;j++){const x=dated[j];add(x.section,'all',x.text,x.done,{due:parseDate(x.date)?x.date:'',category:x.category},j)}
+ if(ii!==v.length||ci!==c.length)throw Error(`V4 layout reconstruction mismatch (${ii}/${v.length} fields, ${ci}/${c.length} checks). Nothing was imported.`);
+ return {format:'work-life-planner-transfer',schema:1,sourceDevice:'original-v4-'+token,exportedAt:now(),records,prefs:{pages:Object.fromEntries(Object.entries(src.p2Visible||{}).map(([k,v])=>[k,v?[1,2]:[1]]))},migration:{tasks:Object.values(records).filter(r=>r.kind==='task').length,notes:Object.values(records).filter(r=>r.kind==='note').length,dailyDate,weekStart}}}
+function legacyImportDialog(legacy){let converted;try{converted=convertLegacy(legacy)}catch(e){modal('Original V4 import requires care',`<div class="notice">${esc(e.message)}</div><p>The original application saved fields by position, so an uncertain conversion could scramble tasks. No data was changed. Keep the original V4 backup and import from it only when its field mapping can be verified.</p>`,[{label:'Close',run:close=>close()}]);return}const m=converted.migration;modal('Import original planner (V4)',`<p>Recognised the original positional layout and prepared <b>${m.tasks} tasks</b> and <b>${m.notes} notes</b> for safe import.</p><p class="backup-info">Daily records date: ${esc(m.dailyDate)}<br>Weekly start: ${esc(m.weekStart)}<br>Existing new-format data will be merged, not cleared.</p><div class="notice">Important: the old application could already have shifted values before it saved. Check the imported records carefully. A shared Saturday/Sunday box becomes Saturday in this migration, since the original file did not distinguish the two days.</div>`,[{label:'Cancel',run:close=>close()},{label:'Merge recovered records',css:'blue',run:close=>{close();mergeTransfer(converted)}}])}
+/* Service/UI wiring */
+document.getElementById('backup-btn').onclick=exportFile;
+document.getElementById('import-btn').onclick=()=>document.getElementById('file-import').click();
+document.getElementById('file-import').onchange=loadImport;
+document.getElementById('settings-btn').onclick=settingsDialog;document.getElementById('help-btn').onclick=helpDialog;
+document.getElementById('preview-btn').onclick=previewDialog;
+document.getElementById('mode-plan').onclick=()=>setMode('plan');
+document.getElementById('mode-layout').onclick=()=>setMode('layout');
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+window.addEventListener('resize',()=>{if(mode==='layout')rescalePapers(document.querySelector('.layout-shell .paper-stack'));const preview=document.querySelector('.print-preview');if(preview)rescalePapers(preview)});
+window.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('modal-layer').children.length)document.getElementById('modal-layer').innerHTML=''});
+window.addEventListener('pagehide',persist);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')persist()});
+window.addEventListener('beforeprint',()=>{if(!document.getElementById('print-root').children.length){const root=document.getElementById('print-root');root.append(buildMeasuredPaperSet(active))}});
+load();render();
+if(!storage.getItem('WORK_LIFE_OFFLINE_PLANNER_V1_SEEN_LEGACY')){try{if(storage.getItem(LEGACY_KEY)){const bar=document.createElement('div');bar.className='notice';bar.innerHTML='An original V4 planner was detected in this browser. <button class="button small" id="legacy-import-now">Review and import its data</button> <button class="button small" id="legacy-dismiss">Not now</button>';document.getElementById('notifications').append(bar);bar.querySelector('#legacy-import-now').onclick=()=>{try{legacyImportDialog(JSON.parse(storage.getItem(LEGACY_KEY)))}catch(e){showToast('Unable to read previous planner data')}};bar.querySelector('#legacy-dismiss').onclick=()=>{storage.setItem('WORK_LIFE_OFFLINE_PLANNER_V1_SEEN_LEGACY','1');bar.remove()}}}catch(e){}}
+</script>
+</body>
+</html>

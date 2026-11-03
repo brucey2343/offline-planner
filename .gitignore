@@ -1,0 +1,22 @@
+# Do not publish backups, private data, credentials or archives
+*backup*.txt
+*transfer*.txt
+*export*.txt
+*_recovery_*.txt
+offline_planner_*.txt
+*.planner-data.json
+*.planner-backup.json
+*.sqlite
+*.sqlite3
+*.db
+*.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+__pycache__/
+.pytest_cache/
+*.zip
+*.bundle
+.DS_Store
