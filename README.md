@@ -12,7 +12,7 @@ A self-contained, offline-first task and printable planning app that runs locall
 
 ## Features
 
-Daily, Weekly, Monthly, Backlog and Anytime views; dated and undated tasks; subtasks; recurrence; overdue and upcoming tasks; independent priority and energy requirements; bulk task actions; custom printable A4 layouts; offline browser storage; Base64 backup transfers with merge review and recovery safeguards.
+Daily, Weekly, Monthly, Projects & Someday and Anytime views; dated and undated tasks; subtasks; recurrence; overdue and upcoming tasks; independent priority and energy requirements; bulk task actions; repeated task entry without losing focus; independently stacked on-screen sections; collapsible priority groups; four-corner resize handles; custom printable A4 layouts with view and sheet selection; offline browser storage; Base64 backup transfers with merge review and recovery safeguards.
 
 ## Privacy and release policy
 
